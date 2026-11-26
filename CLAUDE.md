@@ -11,4 +11,7 @@
 - Physik-Tests: `python -m pytest` (Repo-Root)
 - Web: `cd web && npm run dev` · Tests `npm test` · Typecheck `npm run typecheck`
 - TS-Referenz nach Level-1-Änderungen: `python -m scripts.export_fixtures`
+- Vollversion lokal: `python -m api` (Web-App + Backend auf Port 8000)
+- Level-2-Gleichungen neu erzeugen: `python -m scripts.generate_level2` (nie level2_generated.py von Hand ändern)
+- Nach Web-Änderungen: `cd web && npm run build:standalone` (aktualisiert api/static/index.html)
 - Offene Modellentscheidungen und Rückfragen: docs/validation/model-notes.md

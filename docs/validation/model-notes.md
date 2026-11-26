@@ -1,4 +1,4 @@
-# Modellnotizen und offene Punkte (Etappe 1–2)
+# Modellnotizen und offene Punkte (Etappen 1–3, 5)
 
 Dieses Dokument hält fest, wo die Implementierung Entscheidungen treffen musste, die SPEC.md
 nicht eindeutig regelt. Nach CLAUDE.md gilt: bei Widerspruch SPEC.md – die Punkte unten sind
@@ -66,3 +66,40 @@ oben sind nur Platzhalter, damit die App ohne Daten startet; sie sind in der UI 
 - Celery/Redis, PDF-Report, MP4-Export: noch nicht umgesetzt (Etappen 5–7). Parameterstudien
   laufen für Level 1 im Web Worker.
 - Python 3.12+ (getestet mit 3.13).
+
+## 6. Level 2 – Modellentscheidungen (Etappe 3)
+
+- **Segmente:** Zehen, Rückfuß, Unterschenkel, Oberschenkel, Rumpf+Kopf (Hals gesperrt),
+  Oberarm, Unterarm+Hand – beide Körperhälften in der Sagittalebene zusammengefasst.
+  12 Freiheitsgrade (Zehenspitze x/z, Zehenwinkel, 6 Gelenke, 3 Schwabbelmassen) + Brett z_b.
+  SPEC 5.2 nennt „ca. 13 + 3 Brett“: Hals (1 FG) und Brett x/φ (2 FG) sind hier nicht frei,
+  sondern gesperrt bzw. kinematisch an z_b gekoppelt (x_b = −c z_b², φ_b = κ z_b).
+- **Brettneigung:** κ aus der Biegelinie des Kragbalkens, κ = (2L+3a)/(2a(L+a)) ≈ 0,44 rad/m
+  bei Fulkrum 7,5 → bei 0,5 m Durchbiegung ≈ 12°. Die Neigung kippt die Normalkraft nach vorn;
+  ohne passende Körperhaltung entsteht große Vorwärtsgeschwindigkeit. Schalter
+  `contact.board_slope` = none für Vergleiche.
+- **Schwabbelmassen:** Punktmasse auf der Segmentachse am Segment-KSP, 1 FG längs der Achse;
+  das gesamte Segment-Trägheitsmoment bleibt beim starren Anteil. k_w, c_w werden mit dem
+  Verhältnis Schwabbelmasse / Referenz-Schwabbelmasse (Kong et al.) skaliert.
+- **Fuß:** de-Leva-Fuß geteilt in Zehen (15 % Masse, Schätzung) und Rückfuß; MTP bei 73 %,
+  Sprunggelenk bei 25 % der Fußlänge ab Ferse und 0,039·H über der Sohle (Winter).
+- **Kontakt:** Anker (Materialkoordinate entlang des Bretts) wird bei jedem Kontaktbeginn eines
+  Punkts neu gesetzt (Event), damit x in F∥ = −k∥ x δ wirklich „seit Kontaktbeginn“ zählt.
+- **Haltung bei TD:** Statt des Sprunggelenkwinkels wird die horizontale KSP-Lage relativ zum
+  Ballen vorgegeben (`posture.com_offset`, Default −0,08 m); das Sprunggelenk wird daraus
+  berechnet. Grund: Die KSP-Lage bestimmt maßgeblich v_x und H_y beim Absprung.
+- **Aufprallspitze:** Beim Ballenaufsatz entsteht für ≈ 1 ms eine Kraftspitze (~11 BW), weil
+  der Fuß mit ≈ 4,8 m/s Relativgeschwindigkeit auf den steifen Kontakt trifft. Sie wird als
+  „Aufprallspitze 0–30 ms“ getrennt vom Hauptmaximum ausgewiesen. Ob sie real so hoch ist, kann
+  erst ein Matching an Messdaten zeigen (Etappe 6).
+- **Flugphase Level 2:** Haltung ab TO eingefroren, Rotation mit ω = H_y/I(TO); Saltoanzahl
+  mit geschätzten Trägheitsmomenten je Haltung (flight.*).
+
+## 7. Validierung SPEC 9.2 (Etappe 5) – Ergebnis
+
+Siehe docs/validation/validation-9-2.md. Kurz: Beugen-dann-Strecken nach TD und längere
+Kontaktzeit bei weicherem Fulkrum werden reproduziert; „geringere Knie-Streckgeschwindigkeit
+bei Rotationssprüngen“ ebenfalls. **Nicht** echt reproduziert ist das höhere *aktive*
+Hüftbeugemoment: Die Rotationslösung erzeugt es über Hüftüberstreckung gegen den passiven
+Endanschlag. Ursache vermutlich zu steife/zu enge Hüft-ROM-Grenze (−0,3 rad) und fehlende
+Lendenwirbelsäule. **Rückfrage:** gewünschte Hüft-/Rumpf-Extensionsgrenze für Springer:innen?
