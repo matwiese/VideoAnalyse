@@ -2,6 +2,7 @@
  * App-State (Zustand). Simulationen laufen im Web Worker; neueste Anfrage gewinnt.
  */
 import { create } from 'zustand';
+import SimWorker from './sim-live/worker.ts?worker&inline';
 import type { Level1Result, ParamValues } from './sim-live/level1';
 import type { WorkerRequest, WorkerResponse } from './sim-live/worker';
 import { PARAM_BY_KEY, PRESETS, defaultStatus, defaultValues, validateValues, type Status } from './lib/params';
@@ -42,7 +43,8 @@ interface State {
   runSweep2d: (keyX: string, valuesX: number[], keyY: string, valuesY: number[], metric: string) => void;
 }
 
-const worker = new Worker(new URL('./sim-live/worker.ts', import.meta.url), { type: 'module' });
+// Inline-Worker: funktioniert auch in der Einzeldatei-Version (file://, ohne Server)
+const worker = new SimWorker();
 let reqId = 0;
 let latestRun = 0;
 let latestStudy = 0;

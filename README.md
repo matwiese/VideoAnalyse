@@ -47,6 +47,16 @@ Nach Änderungen an Level 1 die TS-Referenz neu erzeugen und vergleichen:
 python -m scripts.export_fixtures && cd web && npm test
 ```
 
+## Einzeldatei zum Herunterladen
+
+Die komplette App (ohne Python-Backend) als eine HTML-Datei, die per Doppelklick im Browser läuft:
+
+```bash
+cd web && npm run build:standalone
+```
+
+Ergebnis: `web/dist-standalone/index.html` (≈ 1,1 MB). Nur die Schriften Inter/JetBrains Mono werden online nachgeladen; offline greifen Systemschriften.
+
 ## Struktur
 
 ```
