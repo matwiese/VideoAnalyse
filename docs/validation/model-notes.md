@@ -103,3 +103,26 @@ bei Rotationssprüngen“ ebenfalls. **Nicht** echt reproduziert ist das höhere
 Hüftbeugemoment: Die Rotationslösung erzeugt es über Hüftüberstreckung gegen den passiven
 Endanschlag. Ursache vermutlich zu steife/zu enge Hüft-ROM-Grenze (−0,3 rad) und fehlende
 Lendenwirbelsäule. **Rückfrage:** gewünschte Hüft-/Rumpf-Extensionsgrenze für Springer:innen?
+
+## 8. Gelenkgrenzen (Rückmeldung Nutzer, Etappe 6)
+
+Vorgabe: „Überstreckung so weit wie im Springen notwendig und realistisch.“ Umsetzung:
+Rumpf–Oberschenkel bis −0,7 rad (≈ −40°, Hüfte ≈ 15–20° + LWS ≈ 20–25°), Knie und Ellbogen
+bis −5°. Mit der weiteren Grenze kippte der Armschwung den Rumpf auf −54°; realistisch wird das
+durch Rumpfstabilisierung verhindert → Hüftbeuger-Default 30 % Ko-Aktivierung (Schätzung).
+
+## 9. Modus B – Modellentscheidungen
+
+- Inverse Dynamik nutzt dieselben SymPy-Gleichungen wie die Vorwärtssimulation, Schwabbelmassen
+  starr (nicht messbar). Effekt im synthetischen Test: Brettkraft im Mittelteil bis ~20 % daneben,
+  mit starren Schwabbelmassen < 5 % → methodische Grenze, dokumentiert in der Video-Anleitung.
+- Resultierende Brettkraft + Druckpunkt auf der Sohle (Zehe–Ballen–Ferse) aus den drei
+  Basis-Gleichungen; MTP-Moment wird korrigiert, wenn der Druckpunkt auf dem Rückfuß liegt.
+- Filter: Butterworth 2. Ordnung phasenfrei, Residualanalyse (Winter) im Bereich 1–0,3·f_s,
+  Regressionsgerade über die obere Hälfte; Ergebnis auf 4–12 Hz begrenzt.
+- TD/TO: Abstand Zehe ↔ geneigte Brettoberfläche (κ aus Brettmodell); quadratischer Fit außerhalb
+  der Rauschzone (0,6–15 cm), Extrapolation auf 0 → Fehler < 1 Bild bei 200 Hz.
+- Startzustand fürs Matching: Polynom-Fit über 80 ms Flugphase vor TD (Winkel), ballistischer
+  Fit mit bekanntem g über 150 ms (KSP-Geschwindigkeit); Zehen flach auf dem Brett, MTP gleicht aus.
+- Matching-Variablen: T_max der Strecker (MTP, Sprung, Knie, Hüfte) und Schulterflexoren,
+  Onsets/Anstiegszeiten, optional Anfangsbedingungs-Offsets (±3°, ±1,5 rad/s) wie bei Kong et al.

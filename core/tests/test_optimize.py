@@ -41,3 +41,10 @@ def test_clearance_penalty():
     good = {"ok": True, "h_max_board": 1.5, "x_board_plane": 0.8}
     bad = {"ok": True, "h_max_board": 1.5, "x_board_plane": 0.1}
     assert o.score(good, 1) > o.score(bad, 1)
+
+
+def test_min_angular_momentum_penalty():
+    o = Objective("height", min_clearance=0.0, min_H=0.0)
+    fwd = {"ok": True, "h_max_board": 1.5, "x_body_board_plane": 1.0, "H_y": 5.0}
+    back = {"ok": True, "h_max_board": 1.5, "x_body_board_plane": 1.0, "H_y": -20.0}
+    assert o.score(fwd, 2) > o.score(back, 2)

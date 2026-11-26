@@ -15,7 +15,7 @@ Rohdaten: `docs/validation/data/*.json`, Skripte: `scripts/validate_9_2.py`,
 | Weicheres Fulkrum → mehr Kniebeugung bei TD, höhere Brett-Abwärtsgeschw. bei TD | TD-Haltung ist Eingabe; ż_b bei TD hängt von der (festen) Hürde und der Brettphase ab | ⚪ nicht prüfbar (Hürdentechnik fest) |
 | Rotationssprünge: geringere Knie-Winkelgeschw. bei TO (Cheng & Hubbard 2005) | Knie-Streckgeschw. bei TO: Höhe -0,32 rad/s, Rotation -2,58 rad/s (Knie beugt bereits) | ✅ reproduziert |
 | Rotationssprünge: gebeugte Knie bei TO | Kniewinkel bei TO: Höhe -7,6°, Rotation -4,8° | ⚠ Tendenz richtig, Effekt klein |
-| Rotationssprünge: mehr Hüftbeugemoment | Aktives Hüftbeugemoment: Höhe 5 Nm, Rotation 12 Nm; passiv (Endanschlag) Rotation 1242 Nm | ❌ nur passiv über Hüftüberstreckung – **nicht** echt reproduziert |
+| Rotationssprünge: mehr Hüftbeugemoment (Lauf 1) | Aktives Hüftbeugemoment: Höhe 5 Nm, Rotation 12 Nm; passiv (Endanschlag) Rotation 1242 Nm | ❌ nur passiv über Hüftüberstreckung – **nicht** echt reproduziert |
 | Fulkrum-Höhe-Beziehung qualitativ (Cheng & Hubbard 2005, J Biomech) | flache Kurve mit Maximum bei mittlerem Fulkrum (Tabelle) | ⚪ offen – Budget zu klein, Vergleich mit Originaldaten fehlt |
 
 ## Optimierung Höhe vs. Rotation (CMA-ES, 10 Generationen × 10, Robustheit ±10 ms)
@@ -54,3 +54,36 @@ Beobachtungen:
 - Die Hürde ist fest; mit dem Fulkrum ändert sich die Brett-Phasenlage bei TD und damit die
   Energieeinbringung (SPEC Kap. 2). Für eine belastbare Fulkrum-Kurve: Hürdenparameter mit
   optimieren und eigene Hürdendaten aus Video einsetzen.
+
+
+## Lauf 2 – realistische Gelenkgrenzen (Nutzervorgabe) und Vorwärts-Nebenbedingung H_y ≥ 0
+
+Änderungen gegenüber Lauf 1: Rumpf–Oberschenkel bis −40° (Hüfte + LWS), Knie/Ellbogen bis −5°,
+Rumpfstabilisierung (Hüftbeuger-Ko-Aktivierung 30 %), beide Optimierungen mit H_y ≥ 0
+(Vorwärtssprung). CMA-ES 10 × 10, Robustheit ±10 ms.
+
+| Kennwert | Ausgang | Optimum Höhe | Optimum Rotation |
+| --- | --- | --- | --- |
+| h_max über Brett [m] | 1,99 | 1,59 | 0,98 |
+| v_z,TO [m/s] | 4,30 | 3,46 | 1,52 |
+| H_y [kg m²/s] | -7,7 | 2,2 | 28,4 |
+| Rotationspotenzial [kg m²] | -10,1 | 2,6 | 25,6 |
+| Knie-Streckgeschw. bei TO [rad/s] | 2,17 | 2,66 | 3,57 |
+| Kniewinkel bei TO [°] | -12,1 | 2,4 | -12,9 |
+| min. Rumpf–Oberschenkel-Winkel [°] | -21,4 | -53,1 | -52,8 |
+| max. aktives Hüftbeugemoment [Nm] | 57 | 51 | 31 |
+| max. passives Hüftmoment (Endanschlag) [Nm] | 0 | 1434 | 1293 |
+
+Bewertung Lauf 2:
+- Der Ausgangssprung (1,99 m) dreht leicht rückwärts (H_y < 0) und verletzt damit die
+  Vorwärts-Bedingung; das „Höhenoptimum“ mit H_y ≥ 0 liegt deshalb niedriger (Preis der Vorwärtsrotation).
+- Der Zielkonflikt Höhe ↔ Rotation bleibt deutlich (Rotation kostet Höhe).
+- Die Knie-Streckgeschwindigkeit bei TO ist im Rotationsoptimum **nicht** geringer als im
+  Höhenoptimum (Lauf 1 zeigte das Gegenteil) → das Muster aus Cheng & Hubbard ist mit diesem
+  Optimierungsbudget nicht robust reproduziert.
+- Beide Optima nutzen die erlaubte Rumpf-Überstreckung bis an den Endanschlag; das hohe
+  Hüftbeugemoment entsteht weiterhin überwiegend passiv. Ursache: Rumpf + LWS als ein starres
+  Segment mit exponentiellem Endanschlag, generische Kraftwerte.
+- Konsequenz: Optimierungsergebnisse von Level 2 sind derzeit **qualitativ explorativ**. Belastbar
+  werden sie nach dem Matching an echten Sprüngen (subjektspezifische Kraftwerte) und mit größerem
+  Optimierungsbudget (z. B. 40 Generationen über Nacht).

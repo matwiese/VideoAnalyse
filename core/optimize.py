@@ -71,6 +71,7 @@ class Objective:
     w_height: float = 1.0
     w_rotation: float = 0.0
     min_clearance: float = 0.5  # m, Körper vor der Brettspitze beim Passieren der Brettebene
+    min_H: float | None = None  # kg m²/s, Mindest-Drehimpuls H_y (z. B. 0 für Vorwärtssprünge), nur Level 2
     h_ref: float = 1.5
     rot_ref: float = 50.0
 
@@ -86,6 +87,10 @@ class Objective:
             s = rot + 0.05 * h  # Höhe als schwache Nebenwirkung, damit Sprünge nicht flach werden
         else:
             s = self.w_height * h + self.w_rotation * rot
+        if level == 2 and self.min_H is not None:
+            H = m.get("H_y")
+            if H is not None and np.isfinite(H) and H < self.min_H:
+                s -= (self.min_H - H) / 10.0
         clr = m.get("x_body_board_plane") if level == 2 else m.get("x_board_plane")
         if clr is not None and np.isfinite(clr) and clr < self.min_clearance:
             s -= 10.0 * (self.min_clearance - clr) ** 2 + 0.5 * (self.min_clearance - clr)

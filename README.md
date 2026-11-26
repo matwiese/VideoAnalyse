@@ -3,7 +3,7 @@
 Webbasierter Biomechanik-Simulator für Hürde, Brettkontakt und Flug beim 3m-Kunstspringen
 (Duraflex Maxiflex B). Fachliche Grundlage: [SPEC.md](SPEC.md), Arbeitsregeln: [CLAUDE.md](CLAUDE.md).
 
-**Stand: Etappen 1, 2, 3 und 5 umgesetzt**, Etappe 4 in Grundversion.
+**Stand: Etappen 1–6 umgesetzt** (Etappe 6 an synthetischen Testdaten validiert, echte Videodaten folgen).
 
 | Etappe | Inhalt | Status |
 | --- | --- | --- |
@@ -12,7 +12,7 @@ Webbasierter Biomechanik-Simulator für Hürde, Brettkontakt und Flug beim 3m-Ku
 | 3 | de Leva, Level 2 planar (SymPy/Kane), Fußkontakt, Drehmoment-Generatoren, Schwabbelmassen, Test Nr. 4, Energiebilanz | ✅ grün |
 | 4 | 3D-Szene, Zeitleiste, Kraftvektor, Vergleichsmodus, Segmentfigur Level 2 | ✅ |
 | 5 | Optimierung (CMA-ES, Robustheit ±10 ms, Freigang-Nebenbedingung), Parameterstudien 1D/2D (Level 1 + 2), Validierung 9.2 | ✅ (siehe docs/validation) |
-| 6 | Modus B: Import, inverse Dynamik, Matching | offen |
+| 6 | Modus B: Import (TRC/CSV), Butterworth + Residualanalyse, inverse Dynamik, Matching | ✅ an synthetischen Daten, siehe docs/validation/validation-mode-b.md |
 | 7 | Level 3, Asymmetrien, PDF-Report, Brettkalibrier-Assistent | offen |
 
 ## Wo öffne ich das Programm?
@@ -26,6 +26,7 @@ Es gibt zwei Varianten:
 | Level 1 (live) | ✅ | ✅ |
 | Level 2 (Mehrkörper, Gelenke, Drehimpuls, Saltos) | – | ✅ |
 | Optimierung, Level-2-Studien | – | ✅ |
+| Analyse eigener Videos (Modus B) | – | ✅ |
 
 ### Vollversion starten
 
@@ -98,6 +99,11 @@ web/             React 18 + TS + Vite + Zustand + react-three-fiber; src/sim-liv
 data/            parameters.json (value/unit/source/status), presets.json, metrics.json, anthropometry_de_leva.json
 docs/validation/ Modellnotizen, offene Rückfragen, Kennwert-Tabellen
 ```
+
+## Eigene Videos auswerten
+
+Anleitung zu Aufnahme, Tracking (Kinovea/OpenCap) und Export: [docs/video-anleitung.md](docs/video-anleitung.md).
+Ohne eigenes Video: in der App „Analyse (Video)“ → „Beispieldatensatz laden“ (synthetisch).
 
 ## Wichtige Hinweise
 

@@ -2,7 +2,8 @@
  * Gemeinsame Darstellungsdaten für Szene, Zeitleiste und Diagramme – unabhängig vom
  * Modell-Level. Zeitraster 1 kHz von Hürden-Lift-off (bzw. TD) bis Wasser.
  */
-import type { Level2Response } from './api';
+import type { AnalysisResponse, Level2Response } from './api';
+import { makeBoard } from '../sim-live/level1';
 import type { Level1Result, ParamValues } from '../sim-live/level1';
 
 export const POINTS = ['toe', 'ball', 'heel', 'ankle', 'knee', 'hip', 'shoulder', 'neck', 'vertex', 'elbow', 'wrist', 'fingertip'] as const;
@@ -27,6 +28,8 @@ export interface View {
   l2?: Level2Response;
   /** Index des TD-Frames im Raster */
   iTd: number;
+  /** Herkunft: Simulation oder Messung (Modus B) */
+  source?: 'sim' | 'measurement';
 }
 
 export function viewFromLevel1(r: Level1Result): View {
@@ -115,4 +118,38 @@ export function frameAt(v: View, time: number): number {
     if (t[mid] <= time) lo = mid; else hi = mid;
   }
   return time - t[lo] < t[hi] - time ? lo : hi;
+}
+
+/** Darstellung einer gemessenen Bewegung (Modus B) im 3D-Viewer und in den Basis-Diagrammen. */
+export function viewFromMeasurement(r: AnalysisResponse, p: ParamValues): View {
+  const s = r.series;
+  const n = s.t.length;
+  const t = Float64Array.from(s.t);
+  const points = new Float32Array(n * 24);
+  s.points.forEach((row, i) => points.set(row, i * 24));
+  const z_b = new Float64Array(n);
+  const x_b = new Float64Array(n);
+  if (s.board) s.board.forEach((b, i) => { x_b[i] = b[0]; z_b[i] = b[1]; });
+  const v_b = new Float64Array(n);
+  for (let i = 1; i < n - 1; i++) v_b[i] = (z_b[i + 1] - z_b[i - 1]) / (t[i + 1] - t[i - 1]);
+  const b = makeBoard(p);
+  const H = p['athlete.height'] as number;
+  return {
+    level: 2, source: 'measurement', t,
+    com_x: Float64Array.from(s.com.map((c) => c[0])), com_z: Float64Array.from(s.com.map((c) => c[1])), v_z: Float64Array.from(s.com.map((c) => c[3])),
+    z_b, x_b, v_b, F: Float64Array.from(s.F.map((f) => f[1])), Fx: Float64Array.from(s.F.map((f) => f[0])), points,
+    metrics: { ...r.metrics, energy_balance_rel: null } as Record<string, number | null>,
+    warnings: [`Messung (Modus B): ${r.status}`, ...r.warnings],
+    geom: { H, M: p['athlete.mass'] as number, d: b.d, overhang: b.overhang, span: b.span, l_td: 0, l_max: 0 },
+    events: lpEvent(t, z_b, r.t_to, !!s.board), iTd: Math.max(0, s.t.findIndex((x) => x >= 0)),
+  };
+}
+
+function lpEvent(t: Float64Array, z_b: Float64Array, tTo: number, hasBoard: boolean): Record<string, number> {
+  const ev: Record<string, number> = { TD: 0, TO: tTo };
+  if (!hasBoard) return ev;
+  let iMin = -1;
+  for (let i = 0; i < t.length; i++) if (t[i] >= 0 && t[i] <= tTo && (iMin < 0 || z_b[i] < z_b[iMin])) iMin = i;
+  if (iMin >= 0) ev.LP = t[iMin];
+  return ev;
 }

@@ -25,7 +25,7 @@ def main() -> None:
     results = {}
     for kind in ("height", "rotation"):
         t0 = time.time()
-        obj = Objective(kind, min_clearance=0.4)
+        obj = Objective(kind, min_clearance=0.4, min_H=0.0)  # beide als Vorwärtssprung
         res = optimize(ps, 2, obj, generations=gens, popsize=pop, robust=True, n_perturb=1, seed=7,
                        progress=lambda d: print(kind, d, flush=True))
         full = simulate(ps.with_overrides(res.best_values), series=False).metrics

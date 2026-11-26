@@ -1,0 +1,24 @@
+{
+ "_meta": {
+  "description": "Kandidaten-Markernamen je Modellpunkt (Level 2, SPEC 6.7). Vergleich ohne Groß-/Kleinschreibung und ohne Trennzeichen. Erste passende Spalte gewinnt; in der App überschreibbar.",
+  "source": "OpenCap (LaiUhlrich2022-Markerset, OpenPose-Keypoints), Kinovea-Freitextnamen (de/en), eigene Konvention",
+  "status": "Eingabe"
+ },
+ "required": ["toe", "heel", "ankle", "knee", "hip", "shoulder", "elbow", "wrist"],
+ "optional": ["ball", "neck", "vertex", "fingertip", "board_tip"],
+ "candidates": {
+  "toe": ["toe", "r_toe_study", "RBigToe", "bigtoe", "zehe", "zehenspitze", "ttip", "r_toe"],
+  "ball": ["ball", "r_5meta_study", "r_mtp", "mtp", "RSmallToe", "smalltoe", "ballen", "met5", "5meta"],
+  "heel": ["heel", "r_calc_study", "RHeel", "calc", "ferse", "r_heel"],
+  "ankle": ["ankle", "r_ankle_study", "RAnkle", "lmal", "knoechel", "sprunggelenk", "r_ankle"],
+  "knee": ["knee", "r_knee_study", "RKnee", "knie", "r_knee"],
+  "hip": ["hip", "r_hip", "RHip", "hjc", "huefte", "hüfte", "trochanter", "r_hjc_study"],
+  "shoulder": ["shoulder", "r_shoulder_study", "RShoulder", "schulter", "acromion", "r_shoulder"],
+  "neck": ["neck", "C7_study", "C7", "Neck", "hals", "cerv"],
+  "vertex": ["vertex", "head", "Nose", "kopf", "scheitel", "top_head"],
+  "elbow": ["elbow", "r_lelbow_study", "RElbow", "ellbogen", "r_elbow"],
+  "wrist": ["wrist", "r_lwrist_study", "RWrist", "handgelenk", "r_wrist"],
+  "fingertip": ["fingertip", "finger", "fingerspitze", "r_finger"],
+  "board_tip": ["board_tip", "brett", "brettspitze", "board", "tip"]
+ }
+}

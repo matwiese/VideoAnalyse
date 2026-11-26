@@ -39,7 +39,7 @@ interface State {
   time: number;
   playing: boolean;
   speed: number;
-  page: 'sim' | 'study' | 'opt';
+  page: 'sim' | 'study' | 'opt' | 'ana';
   study: StudyResult | null;
   studyProgress: number;
   optJob: JobStatus<OptResult> | null;
@@ -54,7 +54,9 @@ interface State {
   setTime: (t: number) => void;
   setPlaying: (p: boolean) => void;
   setSpeed: (s: number) => void;
-  setPage: (v: 'sim' | 'study' | 'opt') => void;
+  setPage: (v: 'sim' | 'study' | 'opt' | 'ana') => void;
+  markMeasured: (keys: string[]) => void;
+  showView: (v: View) => void;
   runSweep1d: (key: string, values: number[], metrics: string[], level: 1 | 2) => void;
   runSweep2d: (keyX: string, valuesX: number[], keyY: string, valuesY: number[], metric: string, level: 1 | 2) => void;
   runOptimize: (body: Record<string, unknown>) => Promise<void>;
@@ -233,6 +235,8 @@ export const useStore = create<State>((set, get) => {
     setPlaying: (p) => set({ playing: p }),
     setSpeed: (s) => set({ speed: s }),
     setPage: (v) => set({ page: v }),
+    markMeasured: (keys) => set({ status: { ...get().status, ...Object.fromEntries(keys.filter((k) => PARAM_BY_KEY[k]).map((k) => [k, 'Gemessen' as Status])) } }),
+    showView: (v) => set({ view: v, page: 'sim', time: 0, playing: false }),
     runSweep1d: (key, values, metrics, level) => {
       if (level === 2) {
         void backendSweep({ level: 2, overrides: get().values, key_x: key, xs: values }, (r, ms) => {

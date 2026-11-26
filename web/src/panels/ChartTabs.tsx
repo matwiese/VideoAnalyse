@@ -54,6 +54,8 @@ export function ChartTabs() {
         verfügbar in der Vollversion (<code>python -m api</code>, siehe README).
       </div>
     );
+  } else if (v.source === 'measurement' && (tab === 'energy' || activeTab.level)) {
+    chart = <div className="placeholder">Messdaten: Gelenkwinkel, -momente und Matching auf der Seite „Analyse (Video)“.</div>;
   } else if (tab === 'force') {
     const toBW = (r: View) => ({ x: r.t, y: Array.from(r.F, (x) => x / (r.geom.M * 9.81)) });
     const act = v.level === 1 && v.l1 ? v.l1.series.act : null;

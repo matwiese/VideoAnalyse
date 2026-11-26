@@ -3,6 +3,7 @@ import { ProfileSchema, PRESETS, type Profile } from './lib/params';
 import { ChartTabs } from './panels/ChartTabs';
 import { MetricsPanel } from './panels/MetricsPanel';
 import { ParamPanel } from './panels/ParamPanel';
+import { AnalysisPanel } from './panels/AnalysisPanel';
 import { OptPanel } from './panels/OptPanel';
 import { StudyPanel } from './panels/StudyPanel';
 import { Timeline } from './panels/Timeline';
@@ -62,6 +63,7 @@ export function App() {
   const setLevel = useStore((s) => s.setLevel);
   const backend = useStore((s) => s.backend);
   const busy = useStore((s) => s.busy);
+  const viewSource = useStore((s) => s.view?.source);
   const error = useStore((s) => s.error);
   const computeMs = useStore((s) => s.computeMs);
   const roundtripMs = useStore((s) => s.roundtripMs);
@@ -91,6 +93,7 @@ export function App() {
           <button type="button" className={page === 'sim' ? 'active' : ''} onClick={() => setPage('sim')} aria-pressed={page === 'sim'}>Simulation</button>
           <button type="button" className={page === 'study' ? 'active' : ''} onClick={() => setPage('study')} aria-pressed={page === 'study'}>Parameterstudie</button>
           <button type="button" className={page === 'opt' ? 'active' : ''} onClick={() => setPage('opt')} aria-pressed={page === 'opt'}>Optimierung</button>
+          <button type="button" className={page === 'ana' ? 'active' : ''} onClick={() => setPage('ana')} aria-pressed={page === 'ana'}>Analyse (Video)</button>
         </nav>
         <nav className="seg" aria-label="Modell-Level">
           <button type="button" className={level === 1 ? 'active' : ''} onClick={() => setLevel(1)} title="Zwei-Massen-Modell, rechnet live im Browser">Level 1</button>
@@ -145,15 +148,17 @@ export function App() {
                     ))}
                   </div>
                 </div>
-                <div className="scene-note">{level === 2 ? 'Level 2: simulierte Segmentkette; im Flug Haltung ab TO eingefroren, Rotation ω = H/I' : 'Figur = Visualisierung des Level-1-Punktmassenmodells (KSP & Beinlänge simuliert, Gelenke/Arme illustrativ)'}</div>
+                <div className="scene-note">{viewSource === 'measurement' ? 'Messung (Modus B): gefilterte Marker, auf das Modell abgebildet; roter Pfeil = Brettkraft aus inverser Dynamik' : level === 2 ? 'Level 2: simulierte Segmentkette; im Flug Haltung ab TO eingefroren, Rotation ω = H/I' : 'Figur = Visualisierung des Level-1-Punktmassenmodells (KSP & Beinlänge simuliert, Gelenke/Arme illustrativ)'}</div>
               </div>
               <Timeline />
               <ChartTabs />
             </>
           ) : page === 'study' ? (
             <StudyPanel />
-          ) : (
+          ) : page === 'opt' ? (
             <OptPanel />
+          ) : (
+            <AnalysisPanel />
           )}
         </section>
         <MetricsPanel />

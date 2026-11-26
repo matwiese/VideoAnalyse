@@ -62,3 +62,32 @@ export async function jobStatus<R>(id: string): Promise<JobStatus<R>> {
 export async function stopJob(id: string) {
   await fetch(`${BASE}/api/jobs/${id}`, { method: 'DELETE' });
 }
+
+// --- Modus B -------------------------------------------------------------------
+export interface AnalysisResponse {
+  id: string; markers: string[]; mapping: Record<string, string | null>; required: string[]; rate: number; t_to: number; t_td_file: number;
+  residual: { cutoffs: number[]; residuals: number[][]; fc_each: number[]; fc_residual: number; fc_applied: number; note: string } | Record<string, never>;
+  cutoff: number; metrics: Record<string, number>; warnings: string[]; uncertain_joints: string[]; status: string;
+  series: { t: number[]; points: number[][]; F: number[][]; cop: number[][]; tau: number[][]; power: number[][]; theta_deg: number[][];
+    omega: number[][]; com: number[][]; H_y: number[]; board: number[][] | null };
+}
+
+export interface MatchResult {
+  best_values: Record<string, number>; score: number; components: Record<string, number>; baseline_score: number;
+  baseline_components: Record<string, number>; factors: Record<string, number>; sim_metrics: Record<string, number>;
+  sim_theta: number[][]; target_theta: number[][]; history: { generation: number; best: number }[]; evaluations: number;
+}
+
+export function analyze(body: Record<string, unknown>) {
+  return post<AnalysisResponse>('/api/analyze', body);
+}
+
+export async function exampleTrc(): Promise<{ filename: string; text: string; note: string }> {
+  const r = await fetch(`${BASE}/api/example/trc`);
+  if (!r.ok) throw new Error(`Beispiel: ${r.status}`);
+  return r.json();
+}
+
+export function startMatch(body: Record<string, unknown>) {
+  return post<{ job: string; variables: string[] }>('/api/match', body);
+}

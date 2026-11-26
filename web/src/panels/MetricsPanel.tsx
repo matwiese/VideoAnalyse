@@ -33,12 +33,14 @@ export function MetricsPanel() {
         Kennwerte
         <span className="level">{lv === 2 ? 'Level 2 · Mehrkörpermodell planar' : 'Level 1 · Zwei-Massen-Modell'}{busy ? ' · rechnet …' : ''}</span>
       </div>
-      {level !== lv && <div className="warning">Anzeige noch aus Level {lv} – neues Ergebnis wird berechnet.</div>}
+      {view.source === 'measurement' && <div className="warning">Anzeige: <strong>Messung</strong> (inverse Dynamik) – Parameter ändern startet wieder eine Simulation.</div>}
+      {level !== lv && view.source !== 'measurement' && <div className="warning">Anzeige noch aus Level {lv} – neues Ergebnis wird berechnet.</div>}
       <div className={`cards ${busy ? 'stale' : ''}`}>
         {cards.map((k, idx) => {
           const info = METRIC_BY_KEY[k];
-          const st = metricStatus(info, values, status, lv);
-          const na = st.status === 'n/a' || m[k] === null || m[k] === undefined;
+          const meas = view.source === 'measurement';
+          const st = meas ? { status: 'Gemessen' as const, estimates: [] as string[] } : metricStatus(info, values, status, lv);
+          const na = (!meas && st.status === 'n/a') || m[k] === null || m[k] === undefined;
           return (
             <div key={k} className={`card ${idx === 0 ? 'primary' : ''} ${na ? 'na' : ''}`}
               title={na ? 'Rotation erfordert das Mehrkörpermodell (Level 2)' : st.estimates.length ? `Beruht auf ${st.estimates.length} Schätzparametern, z. B.:\n${st.estimates.slice(0, 8).map((e) => PARAM_BY_KEY[e].label ?? e).join('\n')}` : st.status}>
@@ -57,10 +59,10 @@ export function MetricsPanel() {
             </div>
           );
         })}
-        <div className={`card ${balOk ? '' : 'warn'}`} title="Muskelarbeit + Anfangsenergie = Endenergie + Dämpfungsverluste (SPEC Kap. 7)">
+        {view.source !== 'measurement' && <div className={`card ${balOk ? '' : 'warn'}`} title="Muskelarbeit + Anfangsenergie = Endenergie + Dämpfungsverluste (SPEC Kap. 7)">
           <div className="card-label">Energiebilanz</div>
           <div className="card-value mono">{balOk ? 'OK' : 'Warnung'}<span className="unit">{bal.toExponential(1)} %</span></div>
-        </div>
+        </div>}
       </div>
       {lv === 2 && m.somersaults_tuck !== null && m.somersaults_tuck !== undefined && (
         <div className="somersaults mono" title="Mögliche Saltoanzahl bis zum Eintauchen je Körperhaltung (H_y · t_Flug / 2π I, I geschätzt)">

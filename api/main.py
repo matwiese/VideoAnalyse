@@ -24,6 +24,11 @@ from pydantic import BaseModel, Field, ValidationError
 
 from core.models.level1 import resample, simulate
 from core.models.level2 import simulate as simulate2
+from core.athlete import build_anthropometry
+from core.importers import ImportSettings, load_marker_maps, read_any, to_measurement
+from core.inverse import UNCERTAIN_JOINTS, inverse_dynamics
+from core.matching import default_match_variables, match
+from core.models.level2 import Level2Config
 from core.optimize import Objective, default_variables, optimize, sweep
 from core.params import load_defaults, load_presets, make_params
 from core.report import load_metric_info, metric_rows
@@ -71,6 +76,7 @@ class OptRequest(BaseModel):
     w_height: float = 1.0
     w_rotation: float = 0.0
     min_clearance: float = 0.5
+    min_H: float | None = None
     generations: int = Field(8, ge=1, le=60)
     popsize: int = Field(8, ge=4, le=40)
     robust: bool = True
@@ -163,7 +169,7 @@ def _start_job(kind: str, fn) -> str:
 @app.post("/api/optimize")
 def start_optimize(req: OptRequest) -> dict[str, Any]:
     p = params_or_422(None, req.overrides)
-    obj = Objective(req.objective, req.w_height, req.w_rotation, req.min_clearance)
+    obj = Objective(req.objective, req.w_height, req.w_rotation, req.min_clearance, req.min_H)
     variables = req.variables or default_variables(req.level)
     for v in variables:
         if v not in p.params:
@@ -210,6 +216,96 @@ def job_stop(jid: str) -> dict[str, Any]:
         raise HTTPException(404, "Job unbekannt")
     job["stop"] = True
     return {"ok": True}
+
+
+# ---------------------------------------------------------------------------
+# Modus B: Import, inverse Dynamik, Matching (SPEC 6.7, Etappe 6)
+# ---------------------------------------------------------------------------
+
+_analyses: dict[str, dict[str, Any]] = {}
+EXAMPLE = Path(__file__).resolve().parent.parent / "data" / "examples" / "synthetic_elite_w58_200Hz.trc"
+
+
+class AnalyzeRequest(BaseModel):
+    text: str
+    filename: str = ""
+    overrides: dict[str, Any] = {}
+    settings: dict[str, Any] = {}
+    cutoff: float | None = None
+
+
+class MatchRequest(BaseModel):
+    analysis_id: str
+    overrides: dict[str, Any] = {}
+    generations: int = Field(10, ge=1, le=60)
+    popsize: int = Field(10, ge=4, le=40)
+    with_init: bool = True
+
+
+@app.get("/api/example/trc")
+def example_trc() -> dict[str, Any]:
+    if not EXAMPLE.exists():
+        raise HTTPException(404, "Beispieldatensatz fehlt: python -m scripts.make_example")
+    return {"filename": EXAMPLE.name, "text": EXAMPLE.read_text(),
+            "note": "Synthetische Daten (Level-2-Simulation mit bekannten Parametern, 3 mm Rauschen, 200 Hz) – keine Messung."}
+
+
+@app.post("/api/analyze")
+def analyze(req: AnalyzeRequest) -> dict[str, Any]:
+    p = params_or_422(None, req.overrides)
+    try:
+        raw = read_any(req.text, req.filename)
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(422, f"Datei nicht lesbar: {exc}") from exc
+    settings = {**req.settings}
+    settings.setdefault("board_slope_per_m", Level2Config.from_params(p).kappa)
+    try:
+        st = ImportSettings(**settings)
+        meas = to_measurement(raw, st)
+        inv = inverse_dynamics(meas, build_anthropometry(p), cutoff=req.cutoff,
+                               board_k=Level2Config.from_params(p).board.k_s, board_m=Level2Config.from_params(p).board.m_b)
+    except (ValueError, TypeError) as exc:
+        raise HTTPException(422, str(exc)) from exc
+    aid = uuid.uuid4().hex[:12]
+    _analyses[aid] = {"inv": inv, "meas": meas, "overrides": req.overrides}
+    if len(_analyses) > 20:
+        _analyses.pop(next(iter(_analyses)))
+    deg = 180 / np.pi
+    return jsonable({
+        "id": aid, "markers": list(raw.markers), "mapping": meas.mapping, "required": load_marker_maps()["required"],
+        "rate": meas.rate, "t_to": meas.t_to, "t_td_file": float(-meas.t[0]) if len(meas.t) else 0.0,
+        "residual": inv.residual, "cutoff": inv.cutoff, "metrics": inv.metrics, "warnings": inv.warnings,
+        "uncertain_joints": list(UNCERTAIN_JOINTS), "status": "Gemessen (aus Video/Datei, inverse Dynamik)",
+        "series": {
+            "t": inv.t, "points": inv.points, "F": inv.F, "cop": inv.cop, "tau": inv.tau, "power": inv.power,
+            "theta_deg": inv.q[:, 3:9] * deg, "omega": inv.u[:, 3:9], "com": inv.com, "H_y": inv.H_y,
+            "board": inv.board if inv.board is not None else None,
+        },
+    })
+
+
+@app.post("/api/match")
+def start_match(req: MatchRequest) -> dict[str, Any]:
+    a = _analyses.get(req.analysis_id)
+    if not a:
+        raise HTTPException(404, "Analyse unbekannt – bitte erneut analysieren")
+    p = params_or_422(None, {**a["overrides"], **req.overrides})
+    variables = default_match_variables(req.with_init)
+
+    def fn(job):
+        res = match(a["inv"], p, a["meas"].t_to, variables, generations=req.generations, popsize=req.popsize,
+                    executor=pool(), progress=lambda d: job.__setitem__("progress", d), should_stop=lambda: job["stop"])
+        return jsonable({"best_values": res.best_values, "score": res.score, "components": res.components,
+                         "baseline_score": res.baseline_score, "baseline_components": res.baseline_components,
+                         "factors": res.factors, "sim_metrics": res.sim_metrics, "sim_theta": res.sim_theta,
+                         "target_theta": res.target_theta, "history": res.history, "evaluations": res.evaluations})
+
+    return {"job": _start_job("match", fn), "variables": variables}
+
+
+@app.get("/api/marker-maps")
+def marker_maps() -> dict[str, Any]:
+    return load_marker_maps()
 
 
 # ---------------------------------------------------------------------------

@@ -169,3 +169,9 @@ input[type='range'] { accent-color: var(--red); width: 100%; }
 .eflow-val { text-align: right; }
 details summary { cursor: pointer; color: var(--text-2); margin: 8px 0; }
 code { font-family: var(--mono); background: var(--bg); border: 1px solid var(--line); border-radius: 3px; padding: 0 4px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px; }
+.cards4 { grid-template-columns: repeat(4, 1fr); margin-bottom: 10px; }
+.analysis .study-out > * { margin-bottom: 12px; }
+.sep { border: 0; border-top: 1px solid var(--line); margin: 6px 0; width: 100%; }
+.match { border-top: 1px solid var(--line); padding-top: 10px; display: flex; flex-direction: column; gap: 10px; }
+input[type='file'] { color: var(--text-2); font-size: 12px; }

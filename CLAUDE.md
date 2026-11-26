@@ -14,4 +14,6 @@
 - Vollversion lokal: `python -m api` (Web-App + Backend auf Port 8000)
 - Level-2-Gleichungen neu erzeugen: `python -m scripts.generate_level2` (nie level2_generated.py von Hand ändern)
 - Nach Web-Änderungen: `cd web && npm run build:standalone` (aktualisiert api/static/index.html)
+- Beispieldatensatz Modus B neu erzeugen: `python -m scripts.make_example` (synthetisch!)
+- Langläufer-Tests (Matching, Generator): `RUN_SLOW=1 python -m pytest`
 - Offene Modellentscheidungen und Rückfragen: docs/validation/model-notes.md
