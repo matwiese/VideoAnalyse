@@ -1,0 +1,474 @@
+{
+  "_meta": {
+    "description": "Alle physikalischen Parameter des 3m-Brett-Simulators (SPEC Kap. 4, 5, 8). Jeder Eintrag: value, unit, source, status (Literatur | Schätzung | Gemessen | Eingabe), optional min/max/label.",
+    "units": "SI",
+    "version": 1
+  },
+  "athlete": {
+    "height": {
+      "value": 1.7,
+      "unit": "m",
+      "min": 1.3,
+      "max": 2.05,
+      "label": "Körpergröße",
+      "source": "SPEC Kap. 8",
+      "status": "Eingabe"
+    },
+    "mass": {
+      "value": 62.0,
+      "unit": "kg",
+      "min": 30.0,
+      "max": 110.0,
+      "label": "Körpermasse",
+      "source": "SPEC Kap. 8",
+      "status": "Eingabe"
+    },
+    "sex": {
+      "value": "w",
+      "unit": "-",
+      "options": [
+        "w",
+        "m"
+      ],
+      "label": "Geschlecht (Anthropometrie)",
+      "source": "SPEC Kap. 8",
+      "status": "Eingabe"
+    }
+  },
+  "board": {
+    "fulcrum": {
+      "value": 7.5,
+      "unit": "-",
+      "min": 1.0,
+      "max": 9.0,
+      "step": 0.5,
+      "label": "Fulkrum-Stellung",
+      "source": "SPEC Kap. 8; Skala 1 (steif) bis 9 (weich)",
+      "status": "Eingabe"
+    },
+    "fulcrum_model": {
+      "value": "A",
+      "unit": "-",
+      "options": [
+        "A",
+        "B"
+      ],
+      "label": "Fulkrum-Modell",
+      "source": "SPEC Kap. 4.3",
+      "status": "Eingabe"
+    },
+    "k_tip_75": {
+      "value": 5446.0,
+      "unit": "N/m",
+      "min": 2723.0,
+      "max": 8169.0,
+      "label": "Steifigkeit Spitze, Fulkrum 7,5",
+      "source": "Kong, Yeadon & King (Loughborough), core.ac.uk/download/288388973.pdf",
+      "status": "Literatur"
+    },
+    "m_b_75": {
+      "value": 8.87,
+      "unit": "kg",
+      "min": 4.435,
+      "max": 13.305,
+      "label": "Effektive Brettmasse, Fulkrum 7,5",
+      "source": "Kong, Yeadon & King (Loughborough)",
+      "status": "Literatur"
+    },
+    "m_k": {
+      "value": 7551.0,
+      "unit": "N/m^2",
+      "label": "Steigung k_s(d)",
+      "source": "Kong, Yeadon & King (Matching-Konstanten)",
+      "status": "Literatur"
+    },
+    "c_k": {
+      "value": 3597.0,
+      "unit": "N/m",
+      "label": "Achsenabschnitt k_s(d) (nur Referenz, siehe docs/validation/model-notes.md)",
+      "source": "Kong, Yeadon & King (Matching-Konstanten)",
+      "status": "Literatur"
+    },
+    "delta_k_per_step": {
+      "value": 300.0,
+      "unit": "N/m",
+      "label": "Steifigkeitsänderung je Fulkrum-Stufe (Variante A)",
+      "source": "ISB 2011 Abstract 794",
+      "status": "Literatur"
+    },
+    "fulcrum_step_length": {
+      "value": 0.075,
+      "unit": "m",
+      "label": "Fulkrum-Weg je Stufe",
+      "source": "ISB 2011 Abstract 794",
+      "status": "Literatur"
+    },
+    "span_75": {
+      "value": 1.88,
+      "unit": "m",
+      "label": "Spannweite Anker–Fulkrum bei 7,5 (Variante B)",
+      "source": "SPEC Kap. 4.3 Prüfrechnung",
+      "status": "Schätzung"
+    },
+    "overhang_75": {
+      "value": 3.0,
+      "unit": "m",
+      "label": "Überhang Fulkrum–Spitze bei 7,5 (Variante B)",
+      "source": "SPEC Kap. 4.3 Prüfrechnung",
+      "status": "Schätzung"
+    },
+    "mb_exponent": {
+      "value": 0.5,
+      "unit": "-",
+      "label": "Exponent m_b(F) = m_b(7,5)·[k(7,5)/k(F)]^n",
+      "source": "SPEC Kap. 4.3 (Platzhalter, Miller et al. 1998 qualitativ)",
+      "status": "Schätzung"
+    },
+    "zeta": {
+      "value": 0.02,
+      "unit": "-",
+      "min": 0.0,
+      "max": 0.1,
+      "label": "Strukturdämpfung ζ",
+      "source": "SPEC Kap. 4.5",
+      "status": "Schätzung"
+    },
+    "horiz_coeff": {
+      "value": 0.194,
+      "unit": "1/m",
+      "min": 0.0,
+      "max": 0.5,
+      "label": "Horizontal-Koeffizient x_b = −c·z_b²",
+      "source": "Kong, Yeadon & King (ISBS 2004), 1m-Daten",
+      "status": "Literatur"
+    },
+    "length": {
+      "value": 4.88,
+      "unit": "m",
+      "label": "Brettlänge",
+      "source": "Duraflex Maxiflex Model B Datenblatt",
+      "status": "Literatur"
+    },
+    "width": {
+      "value": 0.495,
+      "unit": "m",
+      "label": "Brettbreite",
+      "source": "Duraflex Maxiflex Model B Datenblatt",
+      "status": "Literatur"
+    },
+    "board_mass": {
+      "value": 63.0,
+      "unit": "kg",
+      "label": "Brettmasse gesamt",
+      "source": "Duraflex Maxiflex Model B Datenblatt",
+      "status": "Literatur"
+    },
+    "height_above_water": {
+      "value": 3.0,
+      "unit": "m",
+      "label": "Höhe über Wasser",
+      "source": "World Aquatics",
+      "status": "Literatur"
+    }
+  },
+  "leg": {
+    "l_max_ratio": {
+      "value": 0.63,
+      "unit": "1/H",
+      "label": "KSP über Zehen, voll gestreckt (Ballenstand, Arme hoch) / H",
+      "source": "Abgeleitet aus de Leva (1996) KSP-Höhe ≈0,55·H + Ballenstand + Armhaltung",
+      "status": "Schätzung"
+    },
+    "l_td_ratio": {
+      "value": 0.55,
+      "unit": "1/H",
+      "label": "KSP über Zehen bei Touchdown / H",
+      "source": "Schätzung, Gelenkwinkel-Mittel bei TD",
+      "status": "Schätzung"
+    },
+    "l_opt_ratio": {
+      "value": 0.5,
+      "unit": "1/H",
+      "label": "Optimale Beinlänge (max. Streckkraft) / H",
+      "source": "Schätzung",
+      "status": "Schätzung"
+    },
+    "k_leg_per_kg": {
+      "value": 400.0,
+      "unit": "N/m/kg",
+      "label": "Passive Beinsteifigkeit je kg",
+      "source": "Schätzung (Größenordnung Landungsstudien)",
+      "status": "Schätzung"
+    },
+    "c_leg": {
+      "value": 200.0,
+      "unit": "N s/m",
+      "label": "Passive Beindämpfung",
+      "source": "Schätzung",
+      "status": "Schätzung"
+    },
+    "f_max_bw": {
+      "value": 3.4,
+      "unit": "BW",
+      "label": "Max. isometrische Streckkraft (Bein + Rumpf/Arme pauschal)",
+      "source": "Schätzung (lineares F-v-Profil, Größenordnung Samozino-Profile 30–40 N/kg) → Dynamometrie",
+      "status": "Schätzung"
+    },
+    "v0": {
+      "value": 4.0,
+      "unit": "m/s",
+      "label": "Max. Streckgeschwindigkeit ω₀ (linear)",
+      "source": "Schätzung (Selbie & Caldwell 1996, Form)",
+      "status": "Schätzung"
+    },
+    "gamma": {
+      "value": 0.5,
+      "unit": "-",
+      "label": "Krümmung Γ Kraft-Geschwindigkeit",
+      "source": "Schätzung: nahezu lineares Kraft-Geschwindigkeits-Profil der Beinstreckung",
+      "status": "Schätzung"
+    },
+    "ecc_factor": {
+      "value": 1.5,
+      "unit": "-",
+      "min": 1.0,
+      "max": 1.8,
+      "label": "Exzentrisches Plateau (× F_max)",
+      "source": "Yeadon, King & Wilson (2006): 1,4–1,8",
+      "status": "Literatur"
+    }
+  },
+  "activation": {
+    "a0": {
+      "value": 0.0,
+      "unit": "-",
+      "min": 0.0,
+      "max": 1.0,
+      "label": "Voraktivierung bei TD",
+      "source": "Schätzung (Nelder-Mead-Voroptimierung auf v_z,TO, Preset Elite w 58) → Optimierung Etappe 5",
+      "status": "Schätzung"
+    },
+    "t_on": {
+      "value": 0.0,
+      "unit": "s",
+      "min": -0.1,
+      "max": 0.3,
+      "label": "Onset rel. TD",
+      "source": "Schätzung (Nelder-Mead-Voroptimierung auf v_z,TO, Preset Elite w 58) → Optimierung Etappe 5",
+      "status": "Schätzung"
+    },
+    "t_rise": {
+      "value": 0.3,
+      "unit": "s",
+      "min": 0.02,
+      "max": 0.4,
+      "label": "Anstiegszeit",
+      "source": "Schätzung (Nelder-Mead-Voroptimierung auf v_z,TO, Preset Elite w 58) → Optimierung Etappe 5",
+      "status": "Schätzung"
+    },
+    "a_plateau": {
+      "value": 1.0,
+      "unit": "-",
+      "min": 0.0,
+      "max": 1.0,
+      "label": "Plateau-Level",
+      "source": "Schätzung (Nelder-Mead-Voroptimierung auf v_z,TO, Preset Elite w 58) → Optimierung Etappe 5",
+      "status": "Schätzung"
+    },
+    "t_off": {
+      "value": 0.4,
+      "unit": "s",
+      "min": 0.0,
+      "max": 2.0,
+      "label": "Beginn Abfall rel. TD (Cheng & Hubbard 2005)",
+      "source": "Schätzung (Nelder-Mead-Voroptimierung auf v_z,TO, Preset Elite w 58) → Optimierung Etappe 5",
+      "status": "Schätzung"
+    },
+    "t_fall": {
+      "value": 0.1,
+      "unit": "s",
+      "min": 0.02,
+      "max": 0.4,
+      "label": "Abfallzeit",
+      "source": "Schätzung (Nelder-Mead-Voroptimierung auf v_z,TO, Preset Elite w 58) → Optimierung Etappe 5",
+      "status": "Schätzung"
+    },
+    "a_end": {
+      "value": 0.3,
+      "unit": "-",
+      "min": 0.0,
+      "max": 1.0,
+      "label": "Aktivierung nach Abfall",
+      "source": "Schätzung (Nelder-Mead-Voroptimierung auf v_z,TO, Preset Elite w 58) → Optimierung Etappe 5",
+      "status": "Schätzung"
+    }
+  },
+  "technique": {
+    "start_mode": {
+      "value": "hurdle",
+      "unit": "-",
+      "options": [
+        "hurdle",
+        "touchdown"
+      ],
+      "label": "Start in P3 (Hürde) oder P4 (Touchdown)",
+      "source": "SPEC Kap. 2",
+      "status": "Eingabe"
+    },
+    "approach_steps": {
+      "value": 3,
+      "unit": "-",
+      "min": 3,
+      "max": 5,
+      "label": "Anlaufschritte",
+      "source": "SPEC Kap. 8",
+      "status": "Eingabe"
+    },
+    "approach_speed": {
+      "value": 2.5,
+      "unit": "m/s",
+      "label": "Anlaufgeschwindigkeit (nur Anzeige in Level 1)",
+      "source": "Platzhalter → Videoanalyse",
+      "status": "Schätzung"
+    },
+    "d_toes": {
+      "value": 0.05,
+      "unit": "m",
+      "min": 0.0,
+      "max": 0.3,
+      "label": "Abstand Zehen–Spitze bei TD",
+      "source": "SPEC Kap. 8",
+      "status": "Eingabe"
+    },
+    "hurdle_height": {
+      "value": 0.75,
+      "unit": "m",
+      "min": 0.2,
+      "max": 1.4,
+      "label": "Hürdenhöhe (KSP-Steigung ab Hürden-Lift-off)",
+      "source": "Platzhalter → Videoanalyse (SPEC 9.3)",
+      "status": "Schätzung"
+    },
+    "board_z_hurdle": {
+      "value": -0.05,
+      "unit": "m",
+      "min": -0.4,
+      "max": 0.2,
+      "label": "Brettauslenkung bei Hürden-Lift-off",
+      "source": "Platzhalter → Videoanalyse",
+      "status": "Schätzung"
+    },
+    "board_v_hurdle": {
+      "value": 0.6,
+      "unit": "m/s",
+      "min": -2.0,
+      "max": 2.0,
+      "label": "Brettgeschwindigkeit bei Hürden-Lift-off",
+      "source": "Platzhalter → Videoanalyse",
+      "status": "Schätzung"
+    },
+    "v_z_td": {
+      "value": 3.9,
+      "unit": "m/s",
+      "min": 0.5,
+      "max": 6.0,
+      "label": "v_z,TD abwärts (nur Start in P4)",
+      "source": "Platzhalter → Videoanalyse",
+      "status": "Schätzung"
+    },
+    "board_z_td": {
+      "value": 0.0,
+      "unit": "m",
+      "min": -0.4,
+      "max": 0.2,
+      "label": "Brettauslenkung bei TD (nur Start in P4)",
+      "source": "Platzhalter → Videoanalyse",
+      "status": "Schätzung"
+    },
+    "board_v_td": {
+      "value": 0.0,
+      "unit": "m/s",
+      "min": -2.0,
+      "max": 2.0,
+      "label": "Brettgeschwindigkeit bei TD (nur Start in P4)",
+      "source": "Platzhalter → Videoanalyse",
+      "status": "Schätzung"
+    },
+    "v_x": {
+      "value": 0.5,
+      "unit": "m/s",
+      "min": 0.0,
+      "max": 1.5,
+      "label": "Horizontale KSP-Geschwindigkeit",
+      "source": "Miller (2008), Louganis 3m vorwärts ≈0,5 m/s",
+      "status": "Literatur"
+    },
+    "entry_offset_ratio": {
+      "value": 0.77,
+      "unit": "1/H",
+      "label": "Restlänge KSP–Fingerspitzen gestreckt / H (Wassereintritt)",
+      "source": "Schätzung (Reichhöhe ≈1,33·H, KSP ≈0,56·H)",
+      "status": "Schätzung"
+    }
+  },
+  "numerics": {
+    "dt": {
+      "value": 0.0001,
+      "unit": "s",
+      "label": "RK4-Schrittweite Level 1",
+      "source": "SPEC Kap. 6.4",
+      "status": "Eingabe"
+    },
+    "g": {
+      "value": 9.81,
+      "unit": "m/s^2",
+      "label": "Gravitation",
+      "source": "SPEC Kap. 3",
+      "status": "Eingabe"
+    },
+    "t_contact_max": {
+      "value": 2.0,
+      "unit": "s",
+      "label": "Abbruch Kontaktphase",
+      "source": "Numerik-Schutz",
+      "status": "Eingabe"
+    },
+    "event_tol": {
+      "value": 1e-08,
+      "unit": "s",
+      "label": "Zeit-Toleranz Ereignisortung",
+      "source": "SPEC Kap. 2 (< 0,1 ms gefordert)",
+      "status": "Eingabe"
+    },
+    "output_rate": {
+      "value": 1000.0,
+      "unit": "Hz",
+      "label": "Ausgaberate",
+      "source": "SPEC Kap. 6.4",
+      "status": "Eingabe"
+    }
+  },
+  "flight": {
+    "I_layout_ratio": {
+      "value": 0.068,
+      "unit": "1/(kg m^2) · kg m^2",
+      "label": "I_y gestreckt / (M·H²)",
+      "source": "Schätzung, Größenordnung Yeadon (1990)-Modelle (≈14,5 kg m² bei 70 kg/1,75 m)",
+      "status": "Schätzung"
+    },
+    "I_pike_ratio": {
+      "value": 0.035,
+      "unit": "-",
+      "label": "I_y gehechtet / (M·H²)",
+      "source": "Schätzung, Größenordnung Yeadon (1990)",
+      "status": "Schätzung"
+    },
+    "I_tuck_ratio": {
+      "value": 0.018,
+      "unit": "-",
+      "label": "I_y gehockt / (M·H²)",
+      "source": "Schätzung, Größenordnung Yeadon (1990)",
+      "status": "Schätzung"
+    }
+  }
+}

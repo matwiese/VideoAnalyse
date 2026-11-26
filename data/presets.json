@@ -1,0 +1,12 @@
+{
+  "_meta": {
+    "description": "Athleten-Presets (SPEC Kap. 8). Überschreiben nur die genannten Parameter; alles andere aus parameters.json. Größen sind typische Werte, Status Schätzung.",
+    "status": "Schätzung"
+  },
+  "presets": {
+    "jugend_w_45": {"label": "Jugend w 45 kg", "overrides": {"athlete.height": 1.55, "athlete.mass": 45.0, "athlete.sex": "w", "technique.hurdle_height": 0.60}},
+    "elite_w_58": {"label": "Elite w 58 kg", "overrides": {"athlete.height": 1.63, "athlete.mass": 58.0, "athlete.sex": "w", "technique.hurdle_height": 0.75}},
+    "elite_m_70": {"label": "Elite m 70 kg", "overrides": {"athlete.height": 1.75, "athlete.mass": 70.0, "athlete.sex": "m", "technique.hurdle_height": 0.85, "leg.f_max_bw": 2.8}},
+    "schwer_m_85": {"label": "Schwer m 85 kg", "overrides": {"athlete.height": 1.85, "athlete.mass": 85.0, "athlete.sex": "m", "technique.hurdle_height": 0.80, "leg.f_max_bw": 2.6}}
+  }
+}
