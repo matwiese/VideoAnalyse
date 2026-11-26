@@ -5,7 +5,7 @@ import { useStore } from '../store';
 const SPEEDS = [0.05, 0.1, 0.25, 0.5, 1];
 
 export function Timeline() {
-  const result = useStore((s) => s.result);
+  const result = useStore((s) => s.view);
   const time = useStore((s) => s.time);
   const playing = useStore((s) => s.playing);
   const speed = useStore((s) => s.speed);
@@ -14,8 +14,8 @@ export function Timeline() {
   const setSpeed = useStore((s) => s.setSpeed);
   const raf = useRef(0);
 
-  const t0 = result ? result.series.t[0] : 0;
-  const t1 = result ? result.series.t[result.series.t.length - 1] : 1;
+  const t0 = result ? result.t[0] : 0;
+  const t1 = result ? result.t[result.t.length - 1] : 1;
 
   useEffect(() => {
     if (!playing) return;

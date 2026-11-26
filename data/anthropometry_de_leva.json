@@ -1,0 +1,258 @@
+{
+ "_meta": {
+  "source": "de Leva, P. (1996). Adjustments to Zatsiorsky-Seluyanov's segment inertia parameters. J Biomech 29:1223-1230, Table 4.",
+  "status": "Literatur",
+  "note": "Werte aus Fachwissen übertragen; vor Publikation Zeile für Zeile gegen das Original prüfen (SPEC 5.1). Längen gelten für die Referenzkörpergröße und werden proportional zu H skaliert. Schwerpunkt in % der Segmentlänge ab dem ersten Endpunkt (origin). Trägheitsradien in % der Segmentlänge.",
+  "reference_stature_mm": {
+   "w": 1735,
+   "m": 1741
+  },
+  "reference_mass_kg": {
+   "w": 61.9,
+   "m": 73.0
+  },
+  "unit": "mm, %"
+ },
+ "segments": {
+  "head": {
+   "endpoints": [
+    "VERT",
+    "CERV"
+   ],
+   "length_mm": {
+    "w": 243.7,
+    "m": 242.9
+   },
+   "mass_pct": {
+    "w": 6.68,
+    "m": 6.94
+   },
+   "com_pct_from_origin": {
+    "w": 58.94,
+    "m": 59.76
+   },
+   "r_sagittal_pct": {
+    "w": 33.0,
+    "m": 36.2
+   },
+   "r_transverse_pct": {
+    "w": 35.9,
+    "m": 37.6
+   },
+   "r_longitudinal_pct": {
+    "w": 31.8,
+    "m": 31.2
+   }
+  },
+  "trunk": {
+   "endpoints": [
+    "CERV",
+    "MIDH"
+   ],
+   "length_mm": {
+    "w": 614.8,
+    "m": 603.3
+   },
+   "mass_pct": {
+    "w": 42.57,
+    "m": 43.46
+   },
+   "com_pct_from_origin": {
+    "w": 41.51,
+    "m": 44.86
+   },
+   "r_sagittal_pct": {
+    "w": 35.7,
+    "m": 37.2
+   },
+   "r_transverse_pct": {
+    "w": 33.9,
+    "m": 34.7
+   },
+   "r_longitudinal_pct": {
+    "w": 17.1,
+    "m": 19.1
+   }
+  },
+  "upperarm": {
+   "endpoints": [
+    "SJC",
+    "EJC"
+   ],
+   "length_mm": {
+    "w": 275.1,
+    "m": 281.7
+   },
+   "mass_pct": {
+    "w": 2.55,
+    "m": 2.71
+   },
+   "com_pct_from_origin": {
+    "w": 57.54,
+    "m": 57.72
+   },
+   "r_sagittal_pct": {
+    "w": 27.8,
+    "m": 28.5
+   },
+   "r_transverse_pct": {
+    "w": 26.0,
+    "m": 26.9
+   },
+   "r_longitudinal_pct": {
+    "w": 14.8,
+    "m": 15.8
+   }
+  },
+  "forearm": {
+   "endpoints": [
+    "EJC",
+    "WJC"
+   ],
+   "length_mm": {
+    "w": 264.3,
+    "m": 268.9
+   },
+   "mass_pct": {
+    "w": 1.38,
+    "m": 1.62
+   },
+   "com_pct_from_origin": {
+    "w": 45.59,
+    "m": 45.74
+   },
+   "r_sagittal_pct": {
+    "w": 26.1,
+    "m": 27.6
+   },
+   "r_transverse_pct": {
+    "w": 25.7,
+    "m": 26.5
+   },
+   "r_longitudinal_pct": {
+    "w": 9.4,
+    "m": 12.1
+   }
+  },
+  "hand": {
+   "endpoints": [
+    "WJC",
+    "MET3"
+   ],
+   "length_mm": {
+    "w": 78.0,
+    "m": 86.2
+   },
+   "mass_pct": {
+    "w": 0.56,
+    "m": 0.61
+   },
+   "com_pct_from_origin": {
+    "w": 74.74,
+    "m": 79.0
+   },
+   "r_sagittal_pct": {
+    "w": 53.1,
+    "m": 62.8
+   },
+   "r_transverse_pct": {
+    "w": 45.4,
+    "m": 51.3
+   },
+   "r_longitudinal_pct": {
+    "w": 33.5,
+    "m": 40.1
+   }
+  },
+  "thigh": {
+   "endpoints": [
+    "HJC",
+    "KJC"
+   ],
+   "length_mm": {
+    "w": 368.5,
+    "m": 422.2
+   },
+   "mass_pct": {
+    "w": 14.78,
+    "m": 14.16
+   },
+   "com_pct_from_origin": {
+    "w": 36.12,
+    "m": 40.95
+   },
+   "r_sagittal_pct": {
+    "w": 36.9,
+    "m": 32.9
+   },
+   "r_transverse_pct": {
+    "w": 36.4,
+    "m": 32.9
+   },
+   "r_longitudinal_pct": {
+    "w": 16.2,
+    "m": 14.9
+   }
+  },
+  "shank": {
+   "endpoints": [
+    "KJC",
+    "LMAL"
+   ],
+   "length_mm": {
+    "w": 432.3,
+    "m": 434.0
+   },
+   "mass_pct": {
+    "w": 4.81,
+    "m": 4.33
+   },
+   "com_pct_from_origin": {
+    "w": 44.16,
+    "m": 44.59
+   },
+   "r_sagittal_pct": {
+    "w": 27.1,
+    "m": 25.5
+   },
+   "r_transverse_pct": {
+    "w": 26.7,
+    "m": 24.9
+   },
+   "r_longitudinal_pct": {
+    "w": 9.3,
+    "m": 10.3
+   }
+  },
+  "foot": {
+   "endpoints": [
+    "HEEL",
+    "TTIP"
+   ],
+   "length_mm": {
+    "w": 228.3,
+    "m": 258.1
+   },
+   "mass_pct": {
+    "w": 1.29,
+    "m": 1.37
+   },
+   "com_pct_from_origin": {
+    "w": 40.14,
+    "m": 44.15
+   },
+   "r_sagittal_pct": {
+    "w": 29.9,
+    "m": 25.7
+   },
+   "r_transverse_pct": {
+    "w": 27.9,
+    "m": 24.5
+   },
+   "r_longitudinal_pct": {
+    "w": 13.9,
+    "m": 12.4
+   }
+  }
+ }
+}

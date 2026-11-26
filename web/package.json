@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "typecheck": "tsc -b",
-    "build:standalone": "vite build --config vite.standalone.config.ts"
+    "build:standalone": "vite build --config vite.standalone.config.ts && node scripts/copy-standalone.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^9.114.0",

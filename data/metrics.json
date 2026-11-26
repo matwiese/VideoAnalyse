@@ -1,58 +1,970 @@
 {
-  "_meta": {
-    "description": "Ausgabegrößen (SPEC Kap. 7) für Level 1. deps: Parametergruppen, aus denen der Status abgeleitet wird (board | board_loaded | sim | sim_flight). Größen, die Level 1 nicht liefert, haben level_min > 1.",
-    "deps": {
-      "board": ["board.k_tip_75", "board.m_b_75", "board.m_k", "board.delta_k_per_step", "board.fulcrum", "board.fulcrum_model", "technique.d_toes", "board.mb_exponent?", "board.span_75?", "board.overhang_75?"],
-      "board_loaded": ["@board", "athlete.mass"],
-      "sim": ["@board", "athlete.*", "leg.*", "activation.*", "board.zeta", "@start"],
-      "sim_flight": ["@sim", "technique.v_x", "technique.entry_offset_ratio", "board.height_above_water"]
-    }
+ "_meta": {
+  "description": "Ausgabegrößen (SPEC Kap. 7) für Level 1. deps: Parametergruppen, aus denen der Status abgeleitet wird (board | board_loaded | sim | sim_flight). Größen, die Level 1 nicht liefert, haben level_min > 1. Für Level 2 werden sim/sim_flight durch sim2/sim2_flight ersetzt.",
+  "deps": {
+   "board": [
+    "board.k_tip_75",
+    "board.m_b_75",
+    "board.m_k",
+    "board.delta_k_per_step",
+    "board.fulcrum",
+    "board.fulcrum_model",
+    "technique.d_toes",
+    "board.mb_exponent?",
+    "board.span_75?",
+    "board.overhang_75?"
+   ],
+   "board_loaded": [
+    "@board",
+    "athlete.mass"
+   ],
+   "sim": [
+    "@board",
+    "athlete.*",
+    "leg.*",
+    "activation.*",
+    "board.zeta",
+    "@start"
+   ],
+   "sim_flight": [
+    "@sim",
+    "technique.v_x",
+    "technique.entry_offset_ratio",
+    "board.height_above_water"
+   ],
+   "sim2": [
+    "@board",
+    "athlete.*",
+    "torque.*",
+    "act2.*",
+    "posture.*",
+    "rom.*",
+    "body.*",
+    "wobble.*",
+    "contact.*",
+    "board.zeta",
+    "leg.l_max_ratio",
+    "@start"
+   ],
+   "sim2_flight": [
+    "@sim2",
+    "technique.v_x",
+    "technique.entry_offset_ratio",
+    "board.height_above_water",
+    "flight.*"
+   ]
+  }
+ },
+ "metrics": [
+  {
+   "key": "board_k_s",
+   "label": "Brettsteifigkeit k_s am Lastort",
+   "unit": "N/m",
+   "cat": "Brett",
+   "deps": "board",
+   "fmt": 0
   },
-  "metrics": [
-    {"key": "board_k_s", "label": "Brettsteifigkeit k_s am Lastort", "unit": "N/m", "cat": "Brett", "deps": "board", "fmt": 0},
-    {"key": "board_m_b", "label": "Effektive Brettmasse m_b", "unit": "kg", "cat": "Brett", "deps": "board", "fmt": 2},
-    {"key": "board_f0", "label": "Eigenfrequenz leer", "unit": "Hz", "cat": "Brett", "deps": "board", "fmt": 2},
-    {"key": "board_f_loaded", "label": "Eigenfrequenz belastet √(k/(m_b+M))", "unit": "Hz", "cat": "Brett", "deps": "board_loaded", "fmt": 2},
-    {"key": "board_phase_td_deg", "label": "Brett-Phasenlage bei TD (180–360° = aufwärts)", "unit": "°", "cat": "Brett", "deps": "sim", "fmt": 0},
-    {"key": "hurdle_flight_time", "label": "Hürdenflugzeit", "unit": "s", "cat": "Zeiten", "deps": "sim", "fmt": 3},
-    {"key": "v_z_td", "label": "v_z KSP bei TD", "unit": "m/s", "cat": "Geschwindigkeiten", "deps": "sim", "fmt": 2},
-    {"key": "v_b_td", "label": "ż_b Brett bei TD", "unit": "m/s", "cat": "Geschwindigkeiten", "deps": "sim", "fmt": 2},
-    {"key": "v_rel_td", "label": "Relativgeschwindigkeit Springer–Brett bei TD", "unit": "m/s", "cat": "Geschwindigkeiten", "deps": "sim", "fmt": 2},
-    {"key": "v_b_min", "label": "ż_b max. abwärts", "unit": "m/s", "cat": "Geschwindigkeiten", "deps": "sim", "fmt": 2},
-    {"key": "v_z_lp", "label": "v_z KSP am tiefsten Punkt", "unit": "m/s", "cat": "Geschwindigkeiten", "deps": "sim", "fmt": 2},
-    {"key": "v_z_to", "label": "v_z KSP bei TO", "unit": "m/s", "cat": "Geschwindigkeiten", "deps": "sim", "fmt": 2, "primary": true},
-    {"key": "v_x_to", "label": "v_x KSP bei TO (Level 1: konstant)", "unit": "m/s", "cat": "Geschwindigkeiten", "deps": "sim_flight", "fmt": 2},
-    {"key": "v_b_to", "label": "ż_b Brett bei TO", "unit": "m/s", "cat": "Geschwindigkeiten", "deps": "sim", "fmt": 2},
-    {"key": "takeoff_angle_deg", "label": "Absprungwinkel (zur Horizontalen)", "unit": "°", "cat": "Geschwindigkeiten", "deps": "sim_flight", "fmt": 1},
-    {"key": "F_peak", "label": "Spitzenkraft Brett F_z", "unit": "N", "cat": "Kräfte", "deps": "sim", "fmt": 0},
-    {"key": "F_peak_bw", "label": "Spitzenkraft Brett F_z", "unit": "BW", "cat": "Kräfte", "deps": "sim", "fmt": 2, "primary": true},
-    {"key": "F_mean_bw", "label": "Mittlere Kontaktkraft", "unit": "BW", "cat": "Kräfte", "deps": "sim", "fmt": 2},
-    {"key": "rfd_max", "label": "Max. Kraftanstiegsrate 0–50 ms", "unit": "N/s", "cat": "Kräfte", "deps": "sim", "fmt": 0},
-    {"key": "board_spring_force_max", "label": "Max. Brett-Federkraft k_s·|z_b|", "unit": "N", "cat": "Kräfte", "deps": "sim", "fmt": 0},
-    {"key": "impulse_dep", "label": "Vertikaler Kraftstoß Depression", "unit": "N s", "cat": "Impuls", "deps": "sim", "fmt": 1},
-    {"key": "impulse_rec", "label": "Vertikaler Kraftstoß Recoil", "unit": "N s", "cat": "Impuls", "deps": "sim", "fmt": 1},
-    {"key": "z_b_min", "label": "Max. Brettdurchbiegung", "unit": "m", "cat": "Höhen / Wege", "deps": "sim", "fmt": 3, "primary": true},
-    {"key": "z_c_to", "label": "KSP-Höhe bei TO", "unit": "m", "cat": "Höhen / Wege", "deps": "sim", "fmt": 3},
-    {"key": "h_rise", "label": "KSP-Steigung nach TO", "unit": "m", "cat": "Höhen / Wege", "deps": "sim", "fmt": 3},
-    {"key": "h_max_board", "label": "Max. Flughöhe KSP über Brett", "unit": "m", "cat": "Höhen / Wege", "deps": "sim", "fmt": 3, "primary": true},
-    {"key": "h_max_water", "label": "Max. Flughöhe KSP über Wasser", "unit": "m", "cat": "Höhen / Wege", "deps": "sim_flight", "fmt": 3},
-    {"key": "x_board_plane", "label": "Freigang: KSP-Abstand zur Spitze in Brettebene", "unit": "m", "cat": "Höhen / Wege", "deps": "sim_flight", "fmt": 3, "primary": true},
-    {"key": "t_depression", "label": "Depressionszeit", "unit": "s", "cat": "Zeiten", "deps": "sim", "fmt": 3},
-    {"key": "t_recoil", "label": "Recoilzeit", "unit": "s", "cat": "Zeiten", "deps": "sim", "fmt": 3},
-    {"key": "t_contact", "label": "Kontaktzeit", "unit": "s", "cat": "Zeiten", "deps": "sim", "fmt": 3, "primary": true},
-    {"key": "t_flight", "label": "Flugzeit bis Wasser", "unit": "s", "cat": "Zeiten", "deps": "sim_flight", "fmt": 3},
-    {"key": "E_kin_to", "label": "Kinetische Energie bei TO", "unit": "J", "cat": "Energie", "deps": "sim", "fmt": 0},
-    {"key": "E_board_max", "label": "Max. Brett-Federenergie ½k_s z_b²", "unit": "J", "cat": "Energie", "deps": "sim", "fmt": 0},
-    {"key": "W_athlete_to_board", "label": "Energie Springer → Brett (Depression)", "unit": "J", "cat": "Energie", "deps": "sim", "fmt": 0},
-    {"key": "W_board_to_athlete", "label": "Energie Brett → Springer (Recoil)", "unit": "J", "cat": "Energie", "deps": "sim", "fmt": 0},
-    {"key": "board_efficiency", "label": "Wirkungsgrad Brett (Recoil/Depression)", "unit": "%", "cat": "Energie", "deps": "sim", "fmt": 1, "scale": 100},
-    {"key": "W_act", "label": "Netto-Muskelarbeit Bein", "unit": "J", "cat": "Leistung", "deps": "sim", "fmt": 0},
-    {"key": "W_act_per_kg", "label": "Netto-Muskelarbeit Bein", "unit": "J/kg", "cat": "Leistung", "deps": "sim", "fmt": 2},
-    {"key": "leg_power_peak_per_kg", "label": "Max. Beinleistung F·l̇", "unit": "W/kg", "cat": "Leistung", "deps": "sim", "fmt": 1},
-    {"key": "D_leg", "label": "Dämpfungsverlust Bein", "unit": "J", "cat": "Energie", "deps": "sim", "fmt": 1},
-    {"key": "D_board", "label": "Dämpfungsverlust Brett", "unit": "J", "cat": "Energie", "deps": "sim", "fmt": 1},
-    {"key": "energy_balance_rel", "label": "Energiebilanz-Abweichung", "unit": "%", "cat": "Energie", "deps": "numerics", "fmt": 4, "scale": 100},
-    {"key": "H_y", "label": "Drehimpuls H_y um KSP bei TO", "unit": "kg m²/s", "cat": "Rotation", "deps": "sim", "level_min": 2},
-    {"key": "rotation_potential", "label": "Rotationspotenzial H_y·t_Flug", "unit": "kg m²", "cat": "Rotation", "deps": "sim", "level_min": 2}
-  ]
+  {
+   "key": "board_m_b",
+   "label": "Effektive Brettmasse m_b",
+   "unit": "kg",
+   "cat": "Brett",
+   "deps": "board",
+   "fmt": 2
+  },
+  {
+   "key": "board_f0",
+   "label": "Eigenfrequenz leer",
+   "unit": "Hz",
+   "cat": "Brett",
+   "deps": "board",
+   "fmt": 2
+  },
+  {
+   "key": "board_f_loaded",
+   "label": "Eigenfrequenz belastet √(k/(m_b+M))",
+   "unit": "Hz",
+   "cat": "Brett",
+   "deps": "board_loaded",
+   "fmt": 2
+  },
+  {
+   "key": "board_phase_td_deg",
+   "label": "Brett-Phasenlage bei TD (180–360° = aufwärts)",
+   "unit": "°",
+   "cat": "Brett",
+   "deps": "sim",
+   "fmt": 0
+  },
+  {
+   "key": "hurdle_flight_time",
+   "label": "Hürdenflugzeit",
+   "unit": "s",
+   "cat": "Zeiten",
+   "deps": "sim",
+   "fmt": 3
+  },
+  {
+   "key": "v_z_td",
+   "label": "v_z KSP bei TD",
+   "unit": "m/s",
+   "cat": "Geschwindigkeiten",
+   "deps": "sim",
+   "fmt": 2
+  },
+  {
+   "key": "v_b_td",
+   "label": "ż_b Brett bei TD",
+   "unit": "m/s",
+   "cat": "Geschwindigkeiten",
+   "deps": "sim",
+   "fmt": 2
+  },
+  {
+   "key": "v_rel_td",
+   "label": "Relativgeschwindigkeit Springer–Brett bei TD",
+   "unit": "m/s",
+   "cat": "Geschwindigkeiten",
+   "deps": "sim",
+   "fmt": 2
+  },
+  {
+   "key": "v_b_min",
+   "label": "ż_b max. abwärts",
+   "unit": "m/s",
+   "cat": "Geschwindigkeiten",
+   "deps": "sim",
+   "fmt": 2
+  },
+  {
+   "key": "v_z_lp",
+   "label": "v_z KSP am tiefsten Punkt",
+   "unit": "m/s",
+   "cat": "Geschwindigkeiten",
+   "deps": "sim",
+   "fmt": 2
+  },
+  {
+   "key": "v_z_to",
+   "label": "v_z KSP bei TO",
+   "unit": "m/s",
+   "cat": "Geschwindigkeiten",
+   "deps": "sim",
+   "fmt": 2,
+   "primary": true
+  },
+  {
+   "key": "v_x_to",
+   "label": "v_x KSP bei TO (Level 1: konstant)",
+   "unit": "m/s",
+   "cat": "Geschwindigkeiten",
+   "deps": "sim_flight",
+   "fmt": 2
+  },
+  {
+   "key": "v_b_to",
+   "label": "ż_b Brett bei TO",
+   "unit": "m/s",
+   "cat": "Geschwindigkeiten",
+   "deps": "sim",
+   "fmt": 2
+  },
+  {
+   "key": "takeoff_angle_deg",
+   "label": "Absprungwinkel (zur Horizontalen)",
+   "unit": "°",
+   "cat": "Geschwindigkeiten",
+   "deps": "sim_flight",
+   "fmt": 1
+  },
+  {
+   "key": "F_peak",
+   "label": "Spitzenkraft Brett F_z",
+   "unit": "N",
+   "cat": "Kräfte",
+   "deps": "sim",
+   "fmt": 0
+  },
+  {
+   "key": "F_peak_bw",
+   "label": "Spitzenkraft Brett F_z",
+   "unit": "BW",
+   "cat": "Kräfte",
+   "deps": "sim",
+   "fmt": 2,
+   "primary": true
+  },
+  {
+   "key": "F_mean_bw",
+   "label": "Mittlere Kontaktkraft",
+   "unit": "BW",
+   "cat": "Kräfte",
+   "deps": "sim",
+   "fmt": 2
+  },
+  {
+   "key": "rfd_max",
+   "label": "Max. Kraftanstiegsrate 0–50 ms",
+   "unit": "N/s",
+   "cat": "Kräfte",
+   "deps": "sim",
+   "fmt": 0
+  },
+  {
+   "key": "board_spring_force_max",
+   "label": "Max. Brett-Federkraft k_s·|z_b|",
+   "unit": "N",
+   "cat": "Kräfte",
+   "deps": "sim",
+   "fmt": 0
+  },
+  {
+   "key": "impulse_dep",
+   "label": "Vertikaler Kraftstoß Depression",
+   "unit": "N s",
+   "cat": "Impuls",
+   "deps": "sim",
+   "fmt": 1
+  },
+  {
+   "key": "impulse_rec",
+   "label": "Vertikaler Kraftstoß Recoil",
+   "unit": "N s",
+   "cat": "Impuls",
+   "deps": "sim",
+   "fmt": 1
+  },
+  {
+   "key": "z_b_min",
+   "label": "Max. Brettdurchbiegung",
+   "unit": "m",
+   "cat": "Höhen / Wege",
+   "deps": "sim",
+   "fmt": 3,
+   "primary": true
+  },
+  {
+   "key": "z_c_to",
+   "label": "KSP-Höhe bei TO",
+   "unit": "m",
+   "cat": "Höhen / Wege",
+   "deps": "sim",
+   "fmt": 3
+  },
+  {
+   "key": "h_rise",
+   "label": "KSP-Steigung nach TO",
+   "unit": "m",
+   "cat": "Höhen / Wege",
+   "deps": "sim",
+   "fmt": 3
+  },
+  {
+   "key": "h_max_board",
+   "label": "Max. Flughöhe KSP über Brett",
+   "unit": "m",
+   "cat": "Höhen / Wege",
+   "deps": "sim",
+   "fmt": 3,
+   "primary": true
+  },
+  {
+   "key": "h_max_water",
+   "label": "Max. Flughöhe KSP über Wasser",
+   "unit": "m",
+   "cat": "Höhen / Wege",
+   "deps": "sim_flight",
+   "fmt": 3
+  },
+  {
+   "key": "x_board_plane",
+   "label": "Freigang: KSP-Abstand zur Spitze in Brettebene",
+   "unit": "m",
+   "cat": "Höhen / Wege",
+   "deps": "sim_flight",
+   "fmt": 3,
+   "primary": true
+  },
+  {
+   "key": "t_depression",
+   "label": "Depressionszeit",
+   "unit": "s",
+   "cat": "Zeiten",
+   "deps": "sim",
+   "fmt": 3
+  },
+  {
+   "key": "t_recoil",
+   "label": "Recoilzeit",
+   "unit": "s",
+   "cat": "Zeiten",
+   "deps": "sim",
+   "fmt": 3
+  },
+  {
+   "key": "t_contact",
+   "label": "Kontaktzeit",
+   "unit": "s",
+   "cat": "Zeiten",
+   "deps": "sim",
+   "fmt": 3,
+   "primary": true
+  },
+  {
+   "key": "t_flight",
+   "label": "Flugzeit bis Wasser",
+   "unit": "s",
+   "cat": "Zeiten",
+   "deps": "sim_flight",
+   "fmt": 3
+  },
+  {
+   "key": "E_kin_to",
+   "label": "Kinetische Energie bei TO",
+   "unit": "J",
+   "cat": "Energie",
+   "deps": "sim",
+   "fmt": 0
+  },
+  {
+   "key": "E_board_max",
+   "label": "Max. Brett-Federenergie ½k_s z_b²",
+   "unit": "J",
+   "cat": "Energie",
+   "deps": "sim",
+   "fmt": 0
+  },
+  {
+   "key": "W_athlete_to_board",
+   "label": "Energie Springer → Brett (Depression)",
+   "unit": "J",
+   "cat": "Energie",
+   "deps": "sim",
+   "fmt": 0
+  },
+  {
+   "key": "W_board_to_athlete",
+   "label": "Energie Brett → Springer (Recoil)",
+   "unit": "J",
+   "cat": "Energie",
+   "deps": "sim",
+   "fmt": 0
+  },
+  {
+   "key": "board_efficiency",
+   "label": "Wirkungsgrad Brett (Recoil/Depression)",
+   "unit": "%",
+   "cat": "Energie",
+   "deps": "sim",
+   "fmt": 1,
+   "scale": 100
+  },
+  {
+   "key": "W_act",
+   "label": "Netto-Muskelarbeit Bein",
+   "unit": "J",
+   "cat": "Leistung",
+   "deps": "sim",
+   "fmt": 0
+  },
+  {
+   "key": "W_act_per_kg",
+   "label": "Netto-Muskelarbeit Bein",
+   "unit": "J/kg",
+   "cat": "Leistung",
+   "deps": "sim",
+   "fmt": 2
+  },
+  {
+   "key": "leg_power_peak_per_kg",
+   "label": "Max. Beinleistung F·l̇",
+   "unit": "W/kg",
+   "cat": "Leistung",
+   "deps": "sim",
+   "fmt": 1
+  },
+  {
+   "key": "D_leg",
+   "label": "Dämpfungsverlust Bein",
+   "unit": "J",
+   "cat": "Energie",
+   "deps": "sim",
+   "fmt": 1
+  },
+  {
+   "key": "D_board",
+   "label": "Dämpfungsverlust Brett",
+   "unit": "J",
+   "cat": "Energie",
+   "deps": "sim",
+   "fmt": 1
+  },
+  {
+   "key": "energy_balance_rel",
+   "label": "Energiebilanz-Abweichung",
+   "unit": "%",
+   "cat": "Energie",
+   "deps": "numerics",
+   "fmt": 4,
+   "scale": 100
+  },
+  {
+   "key": "F_impact_bw",
+   "label": "Aufprallspitze 0–30 ms",
+   "unit": "BW",
+   "cat": "Kräfte",
+   "deps": "sim",
+   "fmt": 2,
+   "level_min": 2
+  },
+  {
+   "key": "F_active_peak_bw",
+   "label": "Hauptmaximum Kraft (> 30 ms)",
+   "unit": "BW",
+   "cat": "Kräfte",
+   "deps": "sim",
+   "fmt": 2,
+   "level_min": 2
+  },
+  {
+   "key": "Fx_peak_bw",
+   "label": "Horizontalkraft F_x, Extremwert",
+   "unit": "BW",
+   "cat": "Kräfte",
+   "deps": "sim",
+   "fmt": 2,
+   "level_min": 2
+  },
+  {
+   "key": "impulse_x",
+   "label": "Horizontaler Kraftstoß",
+   "unit": "N s",
+   "cat": "Impuls",
+   "deps": "sim",
+   "fmt": 1,
+   "level_min": 2
+  },
+  {
+   "key": "x_body_board_plane",
+   "label": "Freigang Körper (vorderster Punkt) in Brettebene",
+   "unit": "m",
+   "cat": "Höhen / Wege",
+   "deps": "sim_flight",
+   "fmt": 3,
+   "level_min": 2
+  },
+  {
+   "key": "I_to",
+   "label": "Trägheitsmoment um KSP bei TO",
+   "unit": "kg m²",
+   "cat": "Rotation",
+   "deps": "sim",
+   "fmt": 2,
+   "level_min": 2
+  },
+  {
+   "key": "somersaults_layout",
+   "label": "Mögliche Saltos gestreckt",
+   "unit": "Umdr.",
+   "cat": "Rotation",
+   "deps": "sim_flight",
+   "fmt": 2,
+   "level_min": 2
+  },
+  {
+   "key": "somersaults_pike",
+   "label": "Mögliche Saltos gehechtet",
+   "unit": "Umdr.",
+   "cat": "Rotation",
+   "deps": "sim_flight",
+   "fmt": 2,
+   "level_min": 2
+  },
+  {
+   "key": "somersaults_tuck",
+   "label": "Mögliche Saltos gehockt",
+   "unit": "Umdr.",
+   "cat": "Rotation",
+   "deps": "sim_flight",
+   "fmt": 2,
+   "level_min": 2
+  },
+  {
+   "key": "t_knee_flex_max",
+   "label": "Zeitpunkt max. Kniebeugung nach TD",
+   "unit": "s",
+   "cat": "Zeiten",
+   "deps": "sim",
+   "fmt": 3,
+   "level_min": 2
+  },
+  {
+   "key": "W_pas",
+   "label": "Arbeit passive Gelenkmomente",
+   "unit": "J",
+   "cat": "Leistung",
+   "deps": "sim",
+   "fmt": 1,
+   "level_min": 2
+  },
+  {
+   "key": "W_contact",
+   "label": "Netto-Arbeit Fußkontakt (Dämpfung/Speicher)",
+   "unit": "J",
+   "cat": "Energie",
+   "deps": "sim",
+   "fmt": 1,
+   "level_min": 2
+  },
+  {
+   "key": "mtp_angle_td_deg",
+   "label": "MTP: Winkel bei TD",
+   "unit": "°",
+   "cat": "Gelenke",
+   "deps": "sim",
+   "fmt": 1,
+   "level_min": 2
+  },
+  {
+   "key": "mtp_angle_lp_deg",
+   "label": "MTP: Winkel am tiefsten Punkt",
+   "unit": "°",
+   "cat": "Gelenke",
+   "deps": "sim",
+   "fmt": 1,
+   "level_min": 2
+  },
+  {
+   "key": "mtp_angle_to_deg",
+   "label": "MTP: Winkel bei TO",
+   "unit": "°",
+   "cat": "Gelenke",
+   "deps": "sim",
+   "fmt": 1,
+   "level_min": 2
+  },
+  {
+   "key": "mtp_omega_to",
+   "label": "MTP: Winkelgeschw. bei TO",
+   "unit": "rad/s",
+   "cat": "Gelenke",
+   "deps": "sim",
+   "fmt": 2,
+   "level_min": 2
+  },
+  {
+   "key": "mtp_torque_peak",
+   "label": "MTP: Netto-Moment Extremwert",
+   "unit": "Nm",
+   "cat": "Momente",
+   "deps": "sim",
+   "fmt": 0,
+   "level_min": 2
+  },
+  {
+   "key": "mtp_power_peak",
+   "label": "MTP: max. Leistung",
+   "unit": "W",
+   "cat": "Leistung",
+   "deps": "sim",
+   "fmt": 0,
+   "level_min": 2
+  },
+  {
+   "key": "mtp_work_pos",
+   "label": "MTP: positive Arbeit",
+   "unit": "J",
+   "cat": "Leistung",
+   "deps": "sim",
+   "fmt": 1,
+   "level_min": 2
+  },
+  {
+   "key": "mtp_work_neg",
+   "label": "MTP: negative Arbeit",
+   "unit": "J",
+   "cat": "Leistung",
+   "deps": "sim",
+   "fmt": 1,
+   "level_min": 2
+  },
+  {
+   "key": "ankle_angle_td_deg",
+   "label": "Sprunggelenk: Winkel bei TD",
+   "unit": "°",
+   "cat": "Gelenke",
+   "deps": "sim",
+   "fmt": 1,
+   "level_min": 2
+  },
+  {
+   "key": "ankle_angle_lp_deg",
+   "label": "Sprunggelenk: Winkel am tiefsten Punkt",
+   "unit": "°",
+   "cat": "Gelenke",
+   "deps": "sim",
+   "fmt": 1,
+   "level_min": 2
+  },
+  {
+   "key": "ankle_angle_to_deg",
+   "label": "Sprunggelenk: Winkel bei TO",
+   "unit": "°",
+   "cat": "Gelenke",
+   "deps": "sim",
+   "fmt": 1,
+   "level_min": 2
+  },
+  {
+   "key": "ankle_omega_to",
+   "label": "Sprunggelenk: Winkelgeschw. bei TO",
+   "unit": "rad/s",
+   "cat": "Gelenke",
+   "deps": "sim",
+   "fmt": 2,
+   "level_min": 2
+  },
+  {
+   "key": "ankle_torque_peak",
+   "label": "Sprunggelenk: Netto-Moment Extremwert",
+   "unit": "Nm",
+   "cat": "Momente",
+   "deps": "sim",
+   "fmt": 0,
+   "level_min": 2
+  },
+  {
+   "key": "ankle_power_peak",
+   "label": "Sprunggelenk: max. Leistung",
+   "unit": "W",
+   "cat": "Leistung",
+   "deps": "sim",
+   "fmt": 0,
+   "level_min": 2
+  },
+  {
+   "key": "ankle_work_pos",
+   "label": "Sprunggelenk: positive Arbeit",
+   "unit": "J",
+   "cat": "Leistung",
+   "deps": "sim",
+   "fmt": 1,
+   "level_min": 2
+  },
+  {
+   "key": "ankle_work_neg",
+   "label": "Sprunggelenk: negative Arbeit",
+   "unit": "J",
+   "cat": "Leistung",
+   "deps": "sim",
+   "fmt": 1,
+   "level_min": 2
+  },
+  {
+   "key": "knee_angle_td_deg",
+   "label": "Knie: Winkel bei TD",
+   "unit": "°",
+   "cat": "Gelenke",
+   "deps": "sim",
+   "fmt": 1,
+   "level_min": 2
+  },
+  {
+   "key": "knee_angle_lp_deg",
+   "label": "Knie: Winkel am tiefsten Punkt",
+   "unit": "°",
+   "cat": "Gelenke",
+   "deps": "sim",
+   "fmt": 1,
+   "level_min": 2
+  },
+  {
+   "key": "knee_angle_to_deg",
+   "label": "Knie: Winkel bei TO",
+   "unit": "°",
+   "cat": "Gelenke",
+   "deps": "sim",
+   "fmt": 1,
+   "level_min": 2
+  },
+  {
+   "key": "knee_omega_to",
+   "label": "Knie: Winkelgeschw. bei TO",
+   "unit": "rad/s",
+   "cat": "Gelenke",
+   "deps": "sim",
+   "fmt": 2,
+   "level_min": 2
+  },
+  {
+   "key": "knee_torque_peak",
+   "label": "Knie: Netto-Moment Extremwert",
+   "unit": "Nm",
+   "cat": "Momente",
+   "deps": "sim",
+   "fmt": 0,
+   "level_min": 2
+  },
+  {
+   "key": "knee_power_peak",
+   "label": "Knie: max. Leistung",
+   "unit": "W",
+   "cat": "Leistung",
+   "deps": "sim",
+   "fmt": 0,
+   "level_min": 2
+  },
+  {
+   "key": "knee_work_pos",
+   "label": "Knie: positive Arbeit",
+   "unit": "J",
+   "cat": "Leistung",
+   "deps": "sim",
+   "fmt": 1,
+   "level_min": 2
+  },
+  {
+   "key": "knee_work_neg",
+   "label": "Knie: negative Arbeit",
+   "unit": "J",
+   "cat": "Leistung",
+   "deps": "sim",
+   "fmt": 1,
+   "level_min": 2
+  },
+  {
+   "key": "hip_angle_td_deg",
+   "label": "Hüfte: Winkel bei TD",
+   "unit": "°",
+   "cat": "Gelenke",
+   "deps": "sim",
+   "fmt": 1,
+   "level_min": 2
+  },
+  {
+   "key": "hip_angle_lp_deg",
+   "label": "Hüfte: Winkel am tiefsten Punkt",
+   "unit": "°",
+   "cat": "Gelenke",
+   "deps": "sim",
+   "fmt": 1,
+   "level_min": 2
+  },
+  {
+   "key": "hip_angle_to_deg",
+   "label": "Hüfte: Winkel bei TO",
+   "unit": "°",
+   "cat": "Gelenke",
+   "deps": "sim",
+   "fmt": 1,
+   "level_min": 2
+  },
+  {
+   "key": "hip_omega_to",
+   "label": "Hüfte: Winkelgeschw. bei TO",
+   "unit": "rad/s",
+   "cat": "Gelenke",
+   "deps": "sim",
+   "fmt": 2,
+   "level_min": 2
+  },
+  {
+   "key": "hip_torque_peak",
+   "label": "Hüfte: Netto-Moment Extremwert",
+   "unit": "Nm",
+   "cat": "Momente",
+   "deps": "sim",
+   "fmt": 0,
+   "level_min": 2
+  },
+  {
+   "key": "hip_power_peak",
+   "label": "Hüfte: max. Leistung",
+   "unit": "W",
+   "cat": "Leistung",
+   "deps": "sim",
+   "fmt": 0,
+   "level_min": 2
+  },
+  {
+   "key": "hip_work_pos",
+   "label": "Hüfte: positive Arbeit",
+   "unit": "J",
+   "cat": "Leistung",
+   "deps": "sim",
+   "fmt": 1,
+   "level_min": 2
+  },
+  {
+   "key": "hip_work_neg",
+   "label": "Hüfte: negative Arbeit",
+   "unit": "J",
+   "cat": "Leistung",
+   "deps": "sim",
+   "fmt": 1,
+   "level_min": 2
+  },
+  {
+   "key": "shoulder_angle_td_deg",
+   "label": "Schulter: Winkel bei TD",
+   "unit": "°",
+   "cat": "Gelenke",
+   "deps": "sim",
+   "fmt": 1,
+   "level_min": 2
+  },
+  {
+   "key": "shoulder_angle_lp_deg",
+   "label": "Schulter: Winkel am tiefsten Punkt",
+   "unit": "°",
+   "cat": "Gelenke",
+   "deps": "sim",
+   "fmt": 1,
+   "level_min": 2
+  },
+  {
+   "key": "shoulder_angle_to_deg",
+   "label": "Schulter: Winkel bei TO",
+   "unit": "°",
+   "cat": "Gelenke",
+   "deps": "sim",
+   "fmt": 1,
+   "level_min": 2
+  },
+  {
+   "key": "shoulder_omega_to",
+   "label": "Schulter: Winkelgeschw. bei TO",
+   "unit": "rad/s",
+   "cat": "Gelenke",
+   "deps": "sim",
+   "fmt": 2,
+   "level_min": 2
+  },
+  {
+   "key": "shoulder_torque_peak",
+   "label": "Schulter: Netto-Moment Extremwert",
+   "unit": "Nm",
+   "cat": "Momente",
+   "deps": "sim",
+   "fmt": 0,
+   "level_min": 2
+  },
+  {
+   "key": "shoulder_power_peak",
+   "label": "Schulter: max. Leistung",
+   "unit": "W",
+   "cat": "Leistung",
+   "deps": "sim",
+   "fmt": 0,
+   "level_min": 2
+  },
+  {
+   "key": "shoulder_work_pos",
+   "label": "Schulter: positive Arbeit",
+   "unit": "J",
+   "cat": "Leistung",
+   "deps": "sim",
+   "fmt": 1,
+   "level_min": 2
+  },
+  {
+   "key": "shoulder_work_neg",
+   "label": "Schulter: negative Arbeit",
+   "unit": "J",
+   "cat": "Leistung",
+   "deps": "sim",
+   "fmt": 1,
+   "level_min": 2
+  },
+  {
+   "key": "elbow_angle_td_deg",
+   "label": "Ellbogen: Winkel bei TD",
+   "unit": "°",
+   "cat": "Gelenke",
+   "deps": "sim",
+   "fmt": 1,
+   "level_min": 2
+  },
+  {
+   "key": "elbow_angle_lp_deg",
+   "label": "Ellbogen: Winkel am tiefsten Punkt",
+   "unit": "°",
+   "cat": "Gelenke",
+   "deps": "sim",
+   "fmt": 1,
+   "level_min": 2
+  },
+  {
+   "key": "elbow_angle_to_deg",
+   "label": "Ellbogen: Winkel bei TO",
+   "unit": "°",
+   "cat": "Gelenke",
+   "deps": "sim",
+   "fmt": 1,
+   "level_min": 2
+  },
+  {
+   "key": "elbow_omega_to",
+   "label": "Ellbogen: Winkelgeschw. bei TO",
+   "unit": "rad/s",
+   "cat": "Gelenke",
+   "deps": "sim",
+   "fmt": 2,
+   "level_min": 2
+  },
+  {
+   "key": "elbow_torque_peak",
+   "label": "Ellbogen: Netto-Moment Extremwert",
+   "unit": "Nm",
+   "cat": "Momente",
+   "deps": "sim",
+   "fmt": 0,
+   "level_min": 2
+  },
+  {
+   "key": "elbow_power_peak",
+   "label": "Ellbogen: max. Leistung",
+   "unit": "W",
+   "cat": "Leistung",
+   "deps": "sim",
+   "fmt": 0,
+   "level_min": 2
+  },
+  {
+   "key": "elbow_work_pos",
+   "label": "Ellbogen: positive Arbeit",
+   "unit": "J",
+   "cat": "Leistung",
+   "deps": "sim",
+   "fmt": 1,
+   "level_min": 2
+  },
+  {
+   "key": "elbow_work_neg",
+   "label": "Ellbogen: negative Arbeit",
+   "unit": "J",
+   "cat": "Leistung",
+   "deps": "sim",
+   "fmt": 1,
+   "level_min": 2
+  },
+  {
+   "key": "H_y",
+   "label": "Drehimpuls H_y um KSP bei TO",
+   "unit": "kg m²/s",
+   "cat": "Rotation",
+   "deps": "sim",
+   "level_min": 2,
+   "fmt": 1
+  },
+  {
+   "key": "rotation_potential",
+   "label": "Rotationspotenzial H_y·t_Flug",
+   "unit": "kg m²",
+   "cat": "Rotation",
+   "deps": "sim_flight",
+   "level_min": 2,
+   "fmt": 1
+  }
+ ]
 }

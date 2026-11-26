@@ -1,15 +1,16 @@
 /**
  * 3D-Szene (SPEC 10.3 Mitte). Koordinaten: SPEC (x Wasser, y links, z oben) → three (x, z, −y).
  * Brett mit Biegelinie des Kragbalkens (Auflager Fulkrum, Lager Anker), skaliert auf z_b.
- * Die Segmentfigur visualisiert das Punktmassenmodell (Level 1): KSP-Höhe und Beinlänge
- * sind simuliert, Gelenkwinkel und Armhaltung nur abgeleitet/illustrativ.
+ * Level 1: illustrative Figur (KSP-Höhe und Beinlänge simuliert, Gelenke/Arme abgeleitet).
+ * Level 2: simulierte Segmentkette (12 Körperpunkte); im Flug Haltung ab TO eingefroren,
+ * Rotation mit ω = H/I.
  */
 import { Html, Line, OrbitControls } from '@react-three/drei';
 import { Canvas, useThree } from '@react-three/fiber';
 import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
-import type { Level1Result } from '../sim-live/level1';
+import { frameAt, type View } from '../lib/view';
 import { useStore } from '../store';
 
 const RED = '#E10600';
@@ -18,10 +19,9 @@ const BOARD_T = 0.06;
 
 export type CamPreset = 'side' | 'front' | 'board';
 
-function sampleAt(r: Level1Result, t: number) {
-  const s = r.series;
-  const i = Math.min(s.t.length - 1, Math.max(0, Math.round((t - s.t[0]) * 1000)));
-  return { i, z_c: s.z_c[i], x_c: s.x_c[i], z_b: s.z_b[i], x_b: s.x_b[i], F: s.F[i], l: s.l[i] };
+function sampleAt(r: View, t: number) {
+  const i = frameAt(r, t);
+  return { i, z_c: r.com_z[i], x_c: r.com_x[i], z_b: r.z_b[i], x_b: r.x_b[i], F: r.F[i], Fx: r.Fx[i], l: r.l ? r.l[i] : 0 };
 }
 
 /** Normierte Biegelinie: Überhang (s ab Fulkrum, 0..a) und Spannfeld (u ab Anker, 0..L). */
@@ -32,7 +32,7 @@ function spanShape(u: number, a: number, L: number) {
   return -(u * (L * L - u * u)) / (2 * a * L * (L + a));
 }
 
-function Board({ r, t }: { r: Level1Result; t: number }) {
+function Board({ r, t }: { r: View; t: number }) {
   const { overhang: a, span: L } = r.geom;
   const len = a + L;
   const geo = useMemo(() => new THREE.BoxGeometry(len, BOARD_T, BOARD_W, 120, 1, 1), [len]);
@@ -108,7 +108,53 @@ function knee(ankle: THREE.Vector3, hip: THREE.Vector3, l1: number, l2: number):
   return new THREE.Vector3(ankle.x + l2 * Math.cos(th), ankle.y + l2 * Math.sin(th), 0);
 }
 
-function Diver({ r, t }: { r: Level1Result; t: number }) {
+const SKELETON: [number, number, number, string?][] = [
+  // [Punkt a, Punkt b, Radius/H, Farbe]
+  [0, 1, 0.016], [1, 2, 0.02], [1, 3, 0.02], [2, 3, 0.02], [3, 4, 0.026], [4, 5, 0.036],
+  [5, 7, 0.07], [6, 9, 0.022, '#A1A1AA'], [9, 10, 0.019, '#A1A1AA'], [10, 11, 0.015, '#A1A1AA'],
+];
+
+function Diver2({ r, t }: { r: View; t: number }) {
+  const { H } = r.geom;
+  const s = sampleAt(r, t);
+  const P = r.points!;
+  const pt = (k: number, side = 0) => new THREE.Vector3(P[s.i * 24 + 2 * k], P[s.i * 24 + 2 * k + 1], side);
+  const head = pt(7).lerp(pt(8), 0.55);
+  const BW = r.geom.M * 9.81;
+  const contact = t >= 0 && t <= r.events.TO;
+  const F = new THREE.Vector2(s.Fx, s.F);
+  const fLen = (F.length() / BW) * 0.25;
+  const ang = Math.atan2(F.x, F.y);
+  const foot = pt(1);
+  return (
+    <group>
+      {[-1, 1].map((side) => (
+        <group key={side}>
+          {SKELETON.map(([a, b, rad, col], k) => {
+            const lateral = k === 6 ? 0 : side * (k >= 7 ? 0.1 : 0.055) * H;
+            return <Limb key={k} a={pt(a, lateral)} b={pt(b, lateral)} r={rad * H} color={col} />;
+          })}
+        </group>
+      ))}
+      <mesh position={head}><sphereGeometry args={[0.065 * H, 20, 16]} /><meshStandardMaterial color="#F4F4F5" /></mesh>
+      <mesh position={[s.x_c, s.z_c, 0]}><sphereGeometry args={[0.035, 16, 12]} /><meshBasicMaterial color={RED} /></mesh>
+      {contact && fLen > 0.005 && (
+        <group position={[foot.x, foot.y, 0.3]} rotation={[0, 0, -ang]}>
+          <mesh position={[0, fLen / 2, 0]}><cylinderGeometry args={[0.018, 0.018, fLen, 10]} /><meshBasicMaterial color={RED} /></mesh>
+          <mesh position={[0, fLen + 0.04, 0]}><coneGeometry args={[0.045, 0.09, 14]} /><meshBasicMaterial color={RED} /></mesh>
+          <Html position={[0.12, fLen + 0.05, 0]} className="label3d red">{`${(F.length() / BW).toFixed(2)} BW`}</Html>
+        </group>
+      )}
+    </group>
+  );
+}
+
+function Diver({ r, t }: { r: View; t: number }) {
+  if (r.points) return <Diver2 r={r} t={t} />;
+  return <Diver1 r={r} t={t} />;
+}
+
+function Diver1({ r, t }: { r: View; t: number }) {
   const { H, l_max, d } = r.geom;
   const s = sampleAt(r, t);
   const contact = t >= 0 && t <= r.events.TO;
@@ -165,21 +211,20 @@ function Diver({ r, t }: { r: Level1Result; t: number }) {
   );
 }
 
-function Trajectory({ r }: { r: Level1Result }) {
+function Trajectory({ r }: { r: View }) {
   const pts = useMemo(() => {
-    const s = r.series;
     const out: [number, number, number][] = [];
-    for (let i = 0; i < s.t.length; i += 5) out.push([s.x_c[i], s.z_c[i], 0]);
+    for (let i = 0; i < r.t.length; i += 5) out.push([r.com_x[i], r.com_z[i], 0]);
     return out;
   }, [r]);
-  const xb = r.metrics.x_board_plane as number;
+  const xb = (r.level === 2 ? r.metrics.x_body_board_plane : r.metrics.x_board_plane) as number;
   return (
     <group>
       <Line points={pts} color="#71717A" lineWidth={1.5} dashed dashSize={0.06} gapSize={0.04} />
       {Number.isFinite(xb) && (
         <group>
           <Line points={[[0, 0.002, 0.3], [xb, 0.002, 0.3]]} color="#F4F4F5" lineWidth={1.5} />
-          <Html position={[xb / 2, 0.12, 0.3]} center className="label3d">{`Freigang ${xb.toFixed(2)} m`}</Html>
+          <Html position={[xb / 2, 0.12, 0.3]} center className="label3d">{`Freigang ${r.level === 2 ? 'Körper' : 'KSP'} ${xb.toFixed(2)} m`}</Html>
         </group>
       )}
     </group>
@@ -216,7 +261,7 @@ function CameraRig({ preset, controls }: { preset: CamPreset; controls: React.Re
 }
 
 export function Scene({ preset }: { preset: CamPreset }) {
-  const result = useStore((s) => s.result);
+  const result = useStore((s) => s.view);
   const time = useStore((s) => s.time);
   const controls = useRef<OrbitControlsImpl>(null);
   return (

@@ -1,474 +1,1572 @@
 {
-  "_meta": {
-    "description": "Alle physikalischen Parameter des 3m-Brett-Simulators (SPEC Kap. 4, 5, 8). Jeder Eintrag: value, unit, source, status (Literatur | Schätzung | Gemessen | Eingabe), optional min/max/label.",
-    "units": "SI",
-    "version": 1
+ "_meta": {
+  "description": "Alle physikalischen Parameter des 3m-Brett-Simulators (SPEC Kap. 4, 5, 8). Jeder Eintrag: value, unit, source, status (Literatur | Schätzung | Gemessen | Eingabe), optional min/max/label.",
+  "units": "SI",
+  "version": 1
+ },
+ "athlete": {
+  "height": {
+   "value": 1.7,
+   "unit": "m",
+   "min": 1.3,
+   "max": 2.05,
+   "label": "Körpergröße",
+   "source": "SPEC Kap. 8",
+   "status": "Eingabe"
   },
-  "athlete": {
-    "height": {
-      "value": 1.7,
-      "unit": "m",
-      "min": 1.3,
-      "max": 2.05,
-      "label": "Körpergröße",
-      "source": "SPEC Kap. 8",
-      "status": "Eingabe"
-    },
-    "mass": {
-      "value": 62.0,
-      "unit": "kg",
-      "min": 30.0,
-      "max": 110.0,
-      "label": "Körpermasse",
-      "source": "SPEC Kap. 8",
-      "status": "Eingabe"
-    },
-    "sex": {
-      "value": "w",
-      "unit": "-",
-      "options": [
-        "w",
-        "m"
-      ],
-      "label": "Geschlecht (Anthropometrie)",
-      "source": "SPEC Kap. 8",
-      "status": "Eingabe"
-    }
+  "mass": {
+   "value": 62.0,
+   "unit": "kg",
+   "min": 30.0,
+   "max": 110.0,
+   "label": "Körpermasse",
+   "source": "SPEC Kap. 8",
+   "status": "Eingabe"
   },
-  "board": {
-    "fulcrum": {
-      "value": 7.5,
-      "unit": "-",
-      "min": 1.0,
-      "max": 9.0,
-      "step": 0.5,
-      "label": "Fulkrum-Stellung",
-      "source": "SPEC Kap. 8; Skala 1 (steif) bis 9 (weich)",
-      "status": "Eingabe"
-    },
-    "fulcrum_model": {
-      "value": "A",
-      "unit": "-",
-      "options": [
-        "A",
-        "B"
-      ],
-      "label": "Fulkrum-Modell",
-      "source": "SPEC Kap. 4.3",
-      "status": "Eingabe"
-    },
-    "k_tip_75": {
-      "value": 5446.0,
-      "unit": "N/m",
-      "min": 2723.0,
-      "max": 8169.0,
-      "label": "Steifigkeit Spitze, Fulkrum 7,5",
-      "source": "Kong, Yeadon & King (Loughborough), core.ac.uk/download/288388973.pdf",
-      "status": "Literatur"
-    },
-    "m_b_75": {
-      "value": 8.87,
-      "unit": "kg",
-      "min": 4.435,
-      "max": 13.305,
-      "label": "Effektive Brettmasse, Fulkrum 7,5",
-      "source": "Kong, Yeadon & King (Loughborough)",
-      "status": "Literatur"
-    },
-    "m_k": {
-      "value": 7551.0,
-      "unit": "N/m^2",
-      "label": "Steigung k_s(d)",
-      "source": "Kong, Yeadon & King (Matching-Konstanten)",
-      "status": "Literatur"
-    },
-    "c_k": {
-      "value": 3597.0,
-      "unit": "N/m",
-      "label": "Achsenabschnitt k_s(d) (nur Referenz, siehe docs/validation/model-notes.md)",
-      "source": "Kong, Yeadon & King (Matching-Konstanten)",
-      "status": "Literatur"
-    },
-    "delta_k_per_step": {
-      "value": 300.0,
-      "unit": "N/m",
-      "label": "Steifigkeitsänderung je Fulkrum-Stufe (Variante A)",
-      "source": "ISB 2011 Abstract 794",
-      "status": "Literatur"
-    },
-    "fulcrum_step_length": {
-      "value": 0.075,
-      "unit": "m",
-      "label": "Fulkrum-Weg je Stufe",
-      "source": "ISB 2011 Abstract 794",
-      "status": "Literatur"
-    },
-    "span_75": {
-      "value": 1.88,
-      "unit": "m",
-      "label": "Spannweite Anker–Fulkrum bei 7,5 (Variante B)",
-      "source": "SPEC Kap. 4.3 Prüfrechnung",
-      "status": "Schätzung"
-    },
-    "overhang_75": {
-      "value": 3.0,
-      "unit": "m",
-      "label": "Überhang Fulkrum–Spitze bei 7,5 (Variante B)",
-      "source": "SPEC Kap. 4.3 Prüfrechnung",
-      "status": "Schätzung"
-    },
-    "mb_exponent": {
-      "value": 0.5,
-      "unit": "-",
-      "label": "Exponent m_b(F) = m_b(7,5)·[k(7,5)/k(F)]^n",
-      "source": "SPEC Kap. 4.3 (Platzhalter, Miller et al. 1998 qualitativ)",
-      "status": "Schätzung"
-    },
-    "zeta": {
-      "value": 0.02,
-      "unit": "-",
-      "min": 0.0,
-      "max": 0.1,
-      "label": "Strukturdämpfung ζ",
-      "source": "SPEC Kap. 4.5",
-      "status": "Schätzung"
-    },
-    "horiz_coeff": {
-      "value": 0.194,
-      "unit": "1/m",
-      "min": 0.0,
-      "max": 0.5,
-      "label": "Horizontal-Koeffizient x_b = −c·z_b²",
-      "source": "Kong, Yeadon & King (ISBS 2004), 1m-Daten",
-      "status": "Literatur"
-    },
-    "length": {
-      "value": 4.88,
-      "unit": "m",
-      "label": "Brettlänge",
-      "source": "Duraflex Maxiflex Model B Datenblatt",
-      "status": "Literatur"
-    },
-    "width": {
-      "value": 0.495,
-      "unit": "m",
-      "label": "Brettbreite",
-      "source": "Duraflex Maxiflex Model B Datenblatt",
-      "status": "Literatur"
-    },
-    "board_mass": {
-      "value": 63.0,
-      "unit": "kg",
-      "label": "Brettmasse gesamt",
-      "source": "Duraflex Maxiflex Model B Datenblatt",
-      "status": "Literatur"
-    },
-    "height_above_water": {
-      "value": 3.0,
-      "unit": "m",
-      "label": "Höhe über Wasser",
-      "source": "World Aquatics",
-      "status": "Literatur"
-    }
-  },
-  "leg": {
-    "l_max_ratio": {
-      "value": 0.63,
-      "unit": "1/H",
-      "label": "KSP über Zehen, voll gestreckt (Ballenstand, Arme hoch) / H",
-      "source": "Abgeleitet aus de Leva (1996) KSP-Höhe ≈0,55·H + Ballenstand + Armhaltung",
-      "status": "Schätzung"
-    },
-    "l_td_ratio": {
-      "value": 0.55,
-      "unit": "1/H",
-      "label": "KSP über Zehen bei Touchdown / H",
-      "source": "Schätzung, Gelenkwinkel-Mittel bei TD",
-      "status": "Schätzung"
-    },
-    "l_opt_ratio": {
-      "value": 0.5,
-      "unit": "1/H",
-      "label": "Optimale Beinlänge (max. Streckkraft) / H",
-      "source": "Schätzung",
-      "status": "Schätzung"
-    },
-    "k_leg_per_kg": {
-      "value": 400.0,
-      "unit": "N/m/kg",
-      "label": "Passive Beinsteifigkeit je kg",
-      "source": "Schätzung (Größenordnung Landungsstudien)",
-      "status": "Schätzung"
-    },
-    "c_leg": {
-      "value": 200.0,
-      "unit": "N s/m",
-      "label": "Passive Beindämpfung",
-      "source": "Schätzung",
-      "status": "Schätzung"
-    },
-    "f_max_bw": {
-      "value": 3.4,
-      "unit": "BW",
-      "label": "Max. isometrische Streckkraft (Bein + Rumpf/Arme pauschal)",
-      "source": "Schätzung (lineares F-v-Profil, Größenordnung Samozino-Profile 30–40 N/kg) → Dynamometrie",
-      "status": "Schätzung"
-    },
-    "v0": {
-      "value": 4.0,
-      "unit": "m/s",
-      "label": "Max. Streckgeschwindigkeit ω₀ (linear)",
-      "source": "Schätzung (Selbie & Caldwell 1996, Form)",
-      "status": "Schätzung"
-    },
-    "gamma": {
-      "value": 0.5,
-      "unit": "-",
-      "label": "Krümmung Γ Kraft-Geschwindigkeit",
-      "source": "Schätzung: nahezu lineares Kraft-Geschwindigkeits-Profil der Beinstreckung",
-      "status": "Schätzung"
-    },
-    "ecc_factor": {
-      "value": 1.5,
-      "unit": "-",
-      "min": 1.0,
-      "max": 1.8,
-      "label": "Exzentrisches Plateau (× F_max)",
-      "source": "Yeadon, King & Wilson (2006): 1,4–1,8",
-      "status": "Literatur"
-    }
-  },
-  "activation": {
-    "a0": {
-      "value": 0.0,
-      "unit": "-",
-      "min": 0.0,
-      "max": 1.0,
-      "label": "Voraktivierung bei TD",
-      "source": "Schätzung (Nelder-Mead-Voroptimierung auf v_z,TO, Preset Elite w 58) → Optimierung Etappe 5",
-      "status": "Schätzung"
-    },
-    "t_on": {
-      "value": 0.0,
-      "unit": "s",
-      "min": -0.1,
-      "max": 0.3,
-      "label": "Onset rel. TD",
-      "source": "Schätzung (Nelder-Mead-Voroptimierung auf v_z,TO, Preset Elite w 58) → Optimierung Etappe 5",
-      "status": "Schätzung"
-    },
-    "t_rise": {
-      "value": 0.3,
-      "unit": "s",
-      "min": 0.02,
-      "max": 0.4,
-      "label": "Anstiegszeit",
-      "source": "Schätzung (Nelder-Mead-Voroptimierung auf v_z,TO, Preset Elite w 58) → Optimierung Etappe 5",
-      "status": "Schätzung"
-    },
-    "a_plateau": {
-      "value": 1.0,
-      "unit": "-",
-      "min": 0.0,
-      "max": 1.0,
-      "label": "Plateau-Level",
-      "source": "Schätzung (Nelder-Mead-Voroptimierung auf v_z,TO, Preset Elite w 58) → Optimierung Etappe 5",
-      "status": "Schätzung"
-    },
-    "t_off": {
-      "value": 0.4,
-      "unit": "s",
-      "min": 0.0,
-      "max": 2.0,
-      "label": "Beginn Abfall rel. TD (Cheng & Hubbard 2005)",
-      "source": "Schätzung (Nelder-Mead-Voroptimierung auf v_z,TO, Preset Elite w 58) → Optimierung Etappe 5",
-      "status": "Schätzung"
-    },
-    "t_fall": {
-      "value": 0.1,
-      "unit": "s",
-      "min": 0.02,
-      "max": 0.4,
-      "label": "Abfallzeit",
-      "source": "Schätzung (Nelder-Mead-Voroptimierung auf v_z,TO, Preset Elite w 58) → Optimierung Etappe 5",
-      "status": "Schätzung"
-    },
-    "a_end": {
-      "value": 0.3,
-      "unit": "-",
-      "min": 0.0,
-      "max": 1.0,
-      "label": "Aktivierung nach Abfall",
-      "source": "Schätzung (Nelder-Mead-Voroptimierung auf v_z,TO, Preset Elite w 58) → Optimierung Etappe 5",
-      "status": "Schätzung"
-    }
-  },
-  "technique": {
-    "start_mode": {
-      "value": "hurdle",
-      "unit": "-",
-      "options": [
-        "hurdle",
-        "touchdown"
-      ],
-      "label": "Start in P3 (Hürde) oder P4 (Touchdown)",
-      "source": "SPEC Kap. 2",
-      "status": "Eingabe"
-    },
-    "approach_steps": {
-      "value": 3,
-      "unit": "-",
-      "min": 3,
-      "max": 5,
-      "label": "Anlaufschritte",
-      "source": "SPEC Kap. 8",
-      "status": "Eingabe"
-    },
-    "approach_speed": {
-      "value": 2.5,
-      "unit": "m/s",
-      "label": "Anlaufgeschwindigkeit (nur Anzeige in Level 1)",
-      "source": "Platzhalter → Videoanalyse",
-      "status": "Schätzung"
-    },
-    "d_toes": {
-      "value": 0.05,
-      "unit": "m",
-      "min": 0.0,
-      "max": 0.3,
-      "label": "Abstand Zehen–Spitze bei TD",
-      "source": "SPEC Kap. 8",
-      "status": "Eingabe"
-    },
-    "hurdle_height": {
-      "value": 0.75,
-      "unit": "m",
-      "min": 0.2,
-      "max": 1.4,
-      "label": "Hürdenhöhe (KSP-Steigung ab Hürden-Lift-off)",
-      "source": "Platzhalter → Videoanalyse (SPEC 9.3)",
-      "status": "Schätzung"
-    },
-    "board_z_hurdle": {
-      "value": -0.05,
-      "unit": "m",
-      "min": -0.4,
-      "max": 0.2,
-      "label": "Brettauslenkung bei Hürden-Lift-off",
-      "source": "Platzhalter → Videoanalyse",
-      "status": "Schätzung"
-    },
-    "board_v_hurdle": {
-      "value": 0.6,
-      "unit": "m/s",
-      "min": -2.0,
-      "max": 2.0,
-      "label": "Brettgeschwindigkeit bei Hürden-Lift-off",
-      "source": "Platzhalter → Videoanalyse",
-      "status": "Schätzung"
-    },
-    "v_z_td": {
-      "value": 3.9,
-      "unit": "m/s",
-      "min": 0.5,
-      "max": 6.0,
-      "label": "v_z,TD abwärts (nur Start in P4)",
-      "source": "Platzhalter → Videoanalyse",
-      "status": "Schätzung"
-    },
-    "board_z_td": {
-      "value": 0.0,
-      "unit": "m",
-      "min": -0.4,
-      "max": 0.2,
-      "label": "Brettauslenkung bei TD (nur Start in P4)",
-      "source": "Platzhalter → Videoanalyse",
-      "status": "Schätzung"
-    },
-    "board_v_td": {
-      "value": 0.0,
-      "unit": "m/s",
-      "min": -2.0,
-      "max": 2.0,
-      "label": "Brettgeschwindigkeit bei TD (nur Start in P4)",
-      "source": "Platzhalter → Videoanalyse",
-      "status": "Schätzung"
-    },
-    "v_x": {
-      "value": 0.5,
-      "unit": "m/s",
-      "min": 0.0,
-      "max": 1.5,
-      "label": "Horizontale KSP-Geschwindigkeit",
-      "source": "Miller (2008), Louganis 3m vorwärts ≈0,5 m/s",
-      "status": "Literatur"
-    },
-    "entry_offset_ratio": {
-      "value": 0.77,
-      "unit": "1/H",
-      "label": "Restlänge KSP–Fingerspitzen gestreckt / H (Wassereintritt)",
-      "source": "Schätzung (Reichhöhe ≈1,33·H, KSP ≈0,56·H)",
-      "status": "Schätzung"
-    }
-  },
-  "numerics": {
-    "dt": {
-      "value": 0.0001,
-      "unit": "s",
-      "label": "RK4-Schrittweite Level 1",
-      "source": "SPEC Kap. 6.4",
-      "status": "Eingabe"
-    },
-    "g": {
-      "value": 9.81,
-      "unit": "m/s^2",
-      "label": "Gravitation",
-      "source": "SPEC Kap. 3",
-      "status": "Eingabe"
-    },
-    "t_contact_max": {
-      "value": 2.0,
-      "unit": "s",
-      "label": "Abbruch Kontaktphase",
-      "source": "Numerik-Schutz",
-      "status": "Eingabe"
-    },
-    "event_tol": {
-      "value": 1e-08,
-      "unit": "s",
-      "label": "Zeit-Toleranz Ereignisortung",
-      "source": "SPEC Kap. 2 (< 0,1 ms gefordert)",
-      "status": "Eingabe"
-    },
-    "output_rate": {
-      "value": 1000.0,
-      "unit": "Hz",
-      "label": "Ausgaberate",
-      "source": "SPEC Kap. 6.4",
-      "status": "Eingabe"
-    }
-  },
-  "flight": {
-    "I_layout_ratio": {
-      "value": 0.068,
-      "unit": "1/(kg m^2) · kg m^2",
-      "label": "I_y gestreckt / (M·H²)",
-      "source": "Schätzung, Größenordnung Yeadon (1990)-Modelle (≈14,5 kg m² bei 70 kg/1,75 m)",
-      "status": "Schätzung"
-    },
-    "I_pike_ratio": {
-      "value": 0.035,
-      "unit": "-",
-      "label": "I_y gehechtet / (M·H²)",
-      "source": "Schätzung, Größenordnung Yeadon (1990)",
-      "status": "Schätzung"
-    },
-    "I_tuck_ratio": {
-      "value": 0.018,
-      "unit": "-",
-      "label": "I_y gehockt / (M·H²)",
-      "source": "Schätzung, Größenordnung Yeadon (1990)",
-      "status": "Schätzung"
-    }
+  "sex": {
+   "value": "w",
+   "unit": "-",
+   "options": [
+    "w",
+    "m"
+   ],
+   "label": "Geschlecht (Anthropometrie)",
+   "source": "SPEC Kap. 8",
+   "status": "Eingabe"
   }
+ },
+ "board": {
+  "fulcrum": {
+   "value": 7.5,
+   "unit": "-",
+   "min": 1.0,
+   "max": 9.0,
+   "step": 0.5,
+   "label": "Fulkrum-Stellung",
+   "source": "SPEC Kap. 8; Skala 1 (steif) bis 9 (weich)",
+   "status": "Eingabe"
+  },
+  "fulcrum_model": {
+   "value": "A",
+   "unit": "-",
+   "options": [
+    "A",
+    "B"
+   ],
+   "label": "Fulkrum-Modell",
+   "source": "SPEC Kap. 4.3",
+   "status": "Eingabe"
+  },
+  "k_tip_75": {
+   "value": 5446.0,
+   "unit": "N/m",
+   "min": 2723.0,
+   "max": 8169.0,
+   "label": "Steifigkeit Spitze, Fulkrum 7,5",
+   "source": "Kong, Yeadon & King (Loughborough), core.ac.uk/download/288388973.pdf",
+   "status": "Literatur"
+  },
+  "m_b_75": {
+   "value": 8.87,
+   "unit": "kg",
+   "min": 4.435,
+   "max": 13.305,
+   "label": "Effektive Brettmasse, Fulkrum 7,5",
+   "source": "Kong, Yeadon & King (Loughborough)",
+   "status": "Literatur"
+  },
+  "m_k": {
+   "value": 7551.0,
+   "unit": "N/m^2",
+   "label": "Steigung k_s(d)",
+   "source": "Kong, Yeadon & King (Matching-Konstanten)",
+   "status": "Literatur"
+  },
+  "c_k": {
+   "value": 3597.0,
+   "unit": "N/m",
+   "label": "Achsenabschnitt k_s(d) (nur Referenz, siehe docs/validation/model-notes.md)",
+   "source": "Kong, Yeadon & King (Matching-Konstanten)",
+   "status": "Literatur"
+  },
+  "delta_k_per_step": {
+   "value": 300.0,
+   "unit": "N/m",
+   "label": "Steifigkeitsänderung je Fulkrum-Stufe (Variante A)",
+   "source": "ISB 2011 Abstract 794",
+   "status": "Literatur"
+  },
+  "fulcrum_step_length": {
+   "value": 0.075,
+   "unit": "m",
+   "label": "Fulkrum-Weg je Stufe",
+   "source": "ISB 2011 Abstract 794",
+   "status": "Literatur"
+  },
+  "span_75": {
+   "value": 1.88,
+   "unit": "m",
+   "label": "Spannweite Anker–Fulkrum bei 7,5 (Variante B)",
+   "source": "SPEC Kap. 4.3 Prüfrechnung",
+   "status": "Schätzung"
+  },
+  "overhang_75": {
+   "value": 3.0,
+   "unit": "m",
+   "label": "Überhang Fulkrum–Spitze bei 7,5 (Variante B)",
+   "source": "SPEC Kap. 4.3 Prüfrechnung",
+   "status": "Schätzung"
+  },
+  "mb_exponent": {
+   "value": 0.5,
+   "unit": "-",
+   "label": "Exponent m_b(F) = m_b(7,5)·[k(7,5)/k(F)]^n",
+   "source": "SPEC Kap. 4.3 (Platzhalter, Miller et al. 1998 qualitativ)",
+   "status": "Schätzung"
+  },
+  "zeta": {
+   "value": 0.02,
+   "unit": "-",
+   "min": 0.0,
+   "max": 0.1,
+   "label": "Strukturdämpfung ζ",
+   "source": "SPEC Kap. 4.5",
+   "status": "Schätzung"
+  },
+  "horiz_coeff": {
+   "value": 0.194,
+   "unit": "1/m",
+   "min": 0.0,
+   "max": 0.5,
+   "label": "Horizontal-Koeffizient x_b = −c·z_b²",
+   "source": "Kong, Yeadon & King (ISBS 2004), 1m-Daten",
+   "status": "Literatur"
+  },
+  "length": {
+   "value": 4.88,
+   "unit": "m",
+   "label": "Brettlänge",
+   "source": "Duraflex Maxiflex Model B Datenblatt",
+   "status": "Literatur"
+  },
+  "width": {
+   "value": 0.495,
+   "unit": "m",
+   "label": "Brettbreite",
+   "source": "Duraflex Maxiflex Model B Datenblatt",
+   "status": "Literatur"
+  },
+  "board_mass": {
+   "value": 63.0,
+   "unit": "kg",
+   "label": "Brettmasse gesamt",
+   "source": "Duraflex Maxiflex Model B Datenblatt",
+   "status": "Literatur"
+  },
+  "height_above_water": {
+   "value": 3.0,
+   "unit": "m",
+   "label": "Höhe über Wasser",
+   "source": "World Aquatics",
+   "status": "Literatur"
+  }
+ },
+ "leg": {
+  "l_max_ratio": {
+   "value": 0.63,
+   "unit": "1/H",
+   "label": "KSP über Zehen, voll gestreckt (Ballenstand, Arme hoch) / H",
+   "source": "Abgeleitet aus de Leva (1996) KSP-Höhe ≈0,55·H + Ballenstand + Armhaltung",
+   "status": "Schätzung"
+  },
+  "l_td_ratio": {
+   "value": 0.55,
+   "unit": "1/H",
+   "label": "KSP über Zehen bei Touchdown / H",
+   "source": "Schätzung, Gelenkwinkel-Mittel bei TD",
+   "status": "Schätzung"
+  },
+  "l_opt_ratio": {
+   "value": 0.5,
+   "unit": "1/H",
+   "label": "Optimale Beinlänge (max. Streckkraft) / H",
+   "source": "Schätzung",
+   "status": "Schätzung"
+  },
+  "k_leg_per_kg": {
+   "value": 400.0,
+   "unit": "N/m/kg",
+   "label": "Passive Beinsteifigkeit je kg",
+   "source": "Schätzung (Größenordnung Landungsstudien)",
+   "status": "Schätzung"
+  },
+  "c_leg": {
+   "value": 200.0,
+   "unit": "N s/m",
+   "label": "Passive Beindämpfung",
+   "source": "Schätzung",
+   "status": "Schätzung"
+  },
+  "f_max_bw": {
+   "value": 3.4,
+   "unit": "BW",
+   "label": "Max. isometrische Streckkraft (Bein + Rumpf/Arme pauschal)",
+   "source": "Schätzung (lineares F-v-Profil, Größenordnung Samozino-Profile 30–40 N/kg) → Dynamometrie",
+   "status": "Schätzung"
+  },
+  "v0": {
+   "value": 4.0,
+   "unit": "m/s",
+   "label": "Max. Streckgeschwindigkeit ω₀ (linear)",
+   "source": "Schätzung (Selbie & Caldwell 1996, Form)",
+   "status": "Schätzung"
+  },
+  "gamma": {
+   "value": 0.5,
+   "unit": "-",
+   "label": "Krümmung Γ Kraft-Geschwindigkeit",
+   "source": "Schätzung: nahezu lineares Kraft-Geschwindigkeits-Profil der Beinstreckung",
+   "status": "Schätzung"
+  },
+  "ecc_factor": {
+   "value": 1.5,
+   "unit": "-",
+   "min": 1.0,
+   "max": 1.8,
+   "label": "Exzentrisches Plateau (× F_max)",
+   "source": "Yeadon, King & Wilson (2006): 1,4–1,8",
+   "status": "Literatur"
+  }
+ },
+ "activation": {
+  "a0": {
+   "value": 0.0,
+   "unit": "-",
+   "min": 0.0,
+   "max": 1.0,
+   "label": "Voraktivierung bei TD",
+   "source": "Schätzung (Nelder-Mead-Voroptimierung auf v_z,TO, Preset Elite w 58) → Optimierung Etappe 5",
+   "status": "Schätzung"
+  },
+  "t_on": {
+   "value": 0.0,
+   "unit": "s",
+   "min": -0.1,
+   "max": 0.3,
+   "label": "Onset rel. TD",
+   "source": "Schätzung (Nelder-Mead-Voroptimierung auf v_z,TO, Preset Elite w 58) → Optimierung Etappe 5",
+   "status": "Schätzung"
+  },
+  "t_rise": {
+   "value": 0.3,
+   "unit": "s",
+   "min": 0.02,
+   "max": 0.4,
+   "label": "Anstiegszeit",
+   "source": "Schätzung (Nelder-Mead-Voroptimierung auf v_z,TO, Preset Elite w 58) → Optimierung Etappe 5",
+   "status": "Schätzung"
+  },
+  "a_plateau": {
+   "value": 1.0,
+   "unit": "-",
+   "min": 0.0,
+   "max": 1.0,
+   "label": "Plateau-Level",
+   "source": "Schätzung (Nelder-Mead-Voroptimierung auf v_z,TO, Preset Elite w 58) → Optimierung Etappe 5",
+   "status": "Schätzung"
+  },
+  "t_off": {
+   "value": 0.4,
+   "unit": "s",
+   "min": 0.0,
+   "max": 2.0,
+   "label": "Beginn Abfall rel. TD (Cheng & Hubbard 2005)",
+   "source": "Schätzung (Nelder-Mead-Voroptimierung auf v_z,TO, Preset Elite w 58) → Optimierung Etappe 5",
+   "status": "Schätzung"
+  },
+  "t_fall": {
+   "value": 0.1,
+   "unit": "s",
+   "min": 0.02,
+   "max": 0.4,
+   "label": "Abfallzeit",
+   "source": "Schätzung (Nelder-Mead-Voroptimierung auf v_z,TO, Preset Elite w 58) → Optimierung Etappe 5",
+   "status": "Schätzung"
+  },
+  "a_end": {
+   "value": 0.3,
+   "unit": "-",
+   "min": 0.0,
+   "max": 1.0,
+   "label": "Aktivierung nach Abfall",
+   "source": "Schätzung (Nelder-Mead-Voroptimierung auf v_z,TO, Preset Elite w 58) → Optimierung Etappe 5",
+   "status": "Schätzung"
+  }
+ },
+ "technique": {
+  "start_mode": {
+   "value": "hurdle",
+   "unit": "-",
+   "options": [
+    "hurdle",
+    "touchdown"
+   ],
+   "label": "Start in P3 (Hürde) oder P4 (Touchdown)",
+   "source": "SPEC Kap. 2",
+   "status": "Eingabe"
+  },
+  "approach_steps": {
+   "value": 3,
+   "unit": "-",
+   "min": 3,
+   "max": 5,
+   "label": "Anlaufschritte",
+   "source": "SPEC Kap. 8",
+   "status": "Eingabe"
+  },
+  "approach_speed": {
+   "value": 2.5,
+   "unit": "m/s",
+   "label": "Anlaufgeschwindigkeit (nur Anzeige in Level 1)",
+   "source": "Platzhalter → Videoanalyse",
+   "status": "Schätzung"
+  },
+  "d_toes": {
+   "value": 0.05,
+   "unit": "m",
+   "min": 0.0,
+   "max": 0.3,
+   "label": "Abstand Zehen–Spitze bei TD",
+   "source": "SPEC Kap. 8",
+   "status": "Eingabe"
+  },
+  "hurdle_height": {
+   "value": 0.75,
+   "unit": "m",
+   "min": 0.2,
+   "max": 1.4,
+   "label": "Hürdenhöhe (KSP-Steigung ab Hürden-Lift-off)",
+   "source": "Platzhalter → Videoanalyse (SPEC 9.3)",
+   "status": "Schätzung"
+  },
+  "board_z_hurdle": {
+   "value": -0.05,
+   "unit": "m",
+   "min": -0.4,
+   "max": 0.2,
+   "label": "Brettauslenkung bei Hürden-Lift-off",
+   "source": "Platzhalter → Videoanalyse",
+   "status": "Schätzung"
+  },
+  "board_v_hurdle": {
+   "value": 0.6,
+   "unit": "m/s",
+   "min": -2.0,
+   "max": 2.0,
+   "label": "Brettgeschwindigkeit bei Hürden-Lift-off",
+   "source": "Platzhalter → Videoanalyse",
+   "status": "Schätzung"
+  },
+  "v_z_td": {
+   "value": 3.9,
+   "unit": "m/s",
+   "min": 0.5,
+   "max": 6.0,
+   "label": "v_z,TD abwärts (nur Start in P4)",
+   "source": "Platzhalter → Videoanalyse",
+   "status": "Schätzung"
+  },
+  "board_z_td": {
+   "value": 0.0,
+   "unit": "m",
+   "min": -0.4,
+   "max": 0.2,
+   "label": "Brettauslenkung bei TD (nur Start in P4)",
+   "source": "Platzhalter → Videoanalyse",
+   "status": "Schätzung"
+  },
+  "board_v_td": {
+   "value": 0.0,
+   "unit": "m/s",
+   "min": -2.0,
+   "max": 2.0,
+   "label": "Brettgeschwindigkeit bei TD (nur Start in P4)",
+   "source": "Platzhalter → Videoanalyse",
+   "status": "Schätzung"
+  },
+  "v_x": {
+   "value": 0.5,
+   "unit": "m/s",
+   "min": 0.0,
+   "max": 1.5,
+   "label": "Horizontale KSP-Geschwindigkeit",
+   "source": "Miller (2008), Louganis 3m vorwärts ≈0,5 m/s",
+   "status": "Literatur"
+  },
+  "entry_offset_ratio": {
+   "value": 0.77,
+   "unit": "1/H",
+   "label": "Restlänge KSP–Fingerspitzen gestreckt / H (Wassereintritt)",
+   "source": "Schätzung (Reichhöhe ≈1,33·H, KSP ≈0,56·H)",
+   "status": "Schätzung"
+  }
+ },
+ "numerics": {
+  "dt": {
+   "value": 0.0001,
+   "unit": "s",
+   "label": "RK4-Schrittweite Level 1",
+   "source": "SPEC Kap. 6.4",
+   "status": "Eingabe"
+  },
+  "g": {
+   "value": 9.81,
+   "unit": "m/s^2",
+   "label": "Gravitation",
+   "source": "SPEC Kap. 3",
+   "status": "Eingabe"
+  },
+  "t_contact_max": {
+   "value": 2.0,
+   "unit": "s",
+   "label": "Abbruch Kontaktphase",
+   "source": "Numerik-Schutz",
+   "status": "Eingabe"
+  },
+  "event_tol": {
+   "value": 1e-08,
+   "unit": "s",
+   "label": "Zeit-Toleranz Ereignisortung",
+   "source": "SPEC Kap. 2 (< 0,1 ms gefordert)",
+   "status": "Eingabe"
+  },
+  "output_rate": {
+   "value": 1000.0,
+   "unit": "Hz",
+   "label": "Ausgaberate",
+   "source": "SPEC Kap. 6.4",
+   "status": "Eingabe"
+  },
+  "model_level": {
+   "value": 1,
+   "unit": "-",
+   "label": "Modell-Level (1 Browser, 2 Backend)",
+   "source": "SPEC Kap. 6",
+   "status": "Eingabe",
+   "min": 1,
+   "max": 2,
+   "step": 1
+  },
+  "rtol2": {
+   "value": 1e-06,
+   "unit": "-",
+   "label": "Relative Toleranz Level 2 (Radau)",
+   "source": "SPEC 6.4 (Tests: 1e-8 bis 1e-10; UI-Default 1e-6, Energiebilanz ~1e-8)",
+   "status": "Eingabe"
+  },
+  "max_step2": {
+   "value": 0.0005,
+   "unit": "s",
+   "label": "Max. Schritt Level 2",
+   "source": "SPEC 6.4",
+   "status": "Eingabe"
+  }
+ },
+ "flight": {
+  "I_layout_ratio": {
+   "value": 0.068,
+   "unit": "1/(kg m^2) · kg m^2",
+   "label": "I_y gestreckt / (M·H²)",
+   "source": "Schätzung, Größenordnung Yeadon (1990)-Modelle (≈14,5 kg m² bei 70 kg/1,75 m)",
+   "status": "Schätzung"
+  },
+  "I_pike_ratio": {
+   "value": 0.035,
+   "unit": "-",
+   "label": "I_y gehechtet / (M·H²)",
+   "source": "Schätzung, Größenordnung Yeadon (1990)",
+   "status": "Schätzung"
+  },
+  "I_tuck_ratio": {
+   "value": 0.018,
+   "unit": "-",
+   "label": "I_y gehockt / (M·H²)",
+   "source": "Schätzung, Größenordnung Yeadon (1990)",
+   "status": "Schätzung"
+  }
+ },
+ "contact": {
+  "k_perp": {
+   "value": 260000.0,
+   "unit": "N/m",
+   "label": "Kontakt k⊥ je Punkt",
+   "source": "Kong, Yeadon & King (Loughborough), core.ac.uk/download/288388973.pdf",
+   "status": "Literatur"
+  },
+  "c_perp": {
+   "value": 730000.0,
+   "unit": "N s/m^2",
+   "label": "Kontakt c⊥ (× Eindringtiefe)",
+   "source": "Kong, Yeadon & King (Loughborough), core.ac.uk/download/288388973.pdf",
+   "status": "Literatur"
+  },
+  "k_par": {
+   "value": 87900000.0,
+   "unit": "N/m^2",
+   "label": "Kontakt k∥ (× Eindringtiefe)",
+   "source": "Kong, Yeadon & King (Loughborough), core.ac.uk/download/288388973.pdf",
+   "status": "Literatur"
+  },
+  "c_par": {
+   "value": 11100000.0,
+   "unit": "N s/m^3",
+   "label": "Kontakt c∥ (× Eindringtiefe)",
+   "source": "Kong, Yeadon & King (Loughborough), core.ac.uk/download/288388973.pdf",
+   "status": "Literatur"
+  },
+  "board_slope": {
+   "value": "beam",
+   "unit": "-",
+   "label": "Brettneigung an der Spitze",
+   "source": "SPEC 4.4: Neigung aus Biegelinie des Kragbalkens (Alternative zur 1m-Regression)",
+   "status": "Eingabe",
+   "options": [
+    "beam",
+    "none"
+   ]
+  }
+ },
+ "body": {
+  "foot_mtp_ratio": {
+   "value": 0.73,
+   "unit": "-",
+   "label": "MTP-Lage ab Ferse / Fußlänge",
+   "source": "Schätzung (Fußanatomie)",
+   "status": "Schätzung"
+  },
+  "foot_ankle_x_ratio": {
+   "value": 0.25,
+   "unit": "-",
+   "label": "Sprunggelenk ab Ferse / Fußlänge",
+   "source": "Schätzung",
+   "status": "Schätzung"
+  },
+  "ankle_height_ratio": {
+   "value": 0.039,
+   "unit": "1/H",
+   "label": "Sprunggelenkhöhe / H",
+   "source": "Winter (2009) Proportionen",
+   "status": "Schätzung"
+  },
+  "toes_mass_ratio": {
+   "value": 0.15,
+   "unit": "-",
+   "label": "Massenanteil Zehensegment am Fuß",
+   "source": "Schätzung",
+   "status": "Schätzung"
+  },
+  "shoulder_ratio": {
+   "value": 0.85,
+   "unit": "-",
+   "label": "Schultergelenk ab Hüfte / Rumpflänge (CERV–MIDH)",
+   "source": "Schätzung",
+   "status": "Schätzung"
+  }
+ },
+ "wobble": {
+  "shank_ratio": {
+   "value": 0.7417,
+   "unit": "-",
+   "label": "Schwabbelanteil Unterschenkel",
+   "source": "Kong, Yeadon & King: Elite-Springer, Verhältnis Schwabbel- zu Segmentmasse",
+   "status": "Literatur"
+  },
+  "thigh_ratio": {
+   "value": 0.8867,
+   "unit": "-",
+   "label": "Schwabbelanteil Oberschenkel",
+   "source": "Kong, Yeadon & King: Elite-Springer, Verhältnis Schwabbel- zu Segmentmasse",
+   "status": "Literatur"
+  },
+  "trunk_ratio": {
+   "value": 0.8466,
+   "unit": "-",
+   "label": "Schwabbelanteil Rumpf",
+   "source": "Kong, Yeadon & King: Elite-Springer, Verhältnis Schwabbel- zu Segmentmasse",
+   "status": "Literatur"
+  },
+  "shank_k": {
+   "value": 1718000000.0,
+   "unit": "N/m^3",
+   "label": "k_w Unterschenkel (Elite-Springer)",
+   "source": "Kong, Yeadon & King (Loughborough), core.ac.uk/download/288388973.pdf",
+   "status": "Literatur"
+  },
+  "thigh_k": {
+   "value": 691000000.0,
+   "unit": "N/m^3",
+   "label": "k_w Oberschenkel",
+   "source": "Kong, Yeadon & King (Loughborough), core.ac.uk/download/288388973.pdf",
+   "status": "Literatur"
+  },
+  "trunk_k": {
+   "value": 101000000.0,
+   "unit": "N/m^3",
+   "label": "k_w Rumpf",
+   "source": "Kong, Yeadon & King (Loughborough), core.ac.uk/download/288388973.pdf",
+   "status": "Literatur"
+  },
+  "shank_c": {
+   "value": 148.0,
+   "unit": "N s/m",
+   "label": "c_w Unterschenkel",
+   "source": "Kong, Yeadon & King (Loughborough), core.ac.uk/download/288388973.pdf",
+   "status": "Literatur"
+  },
+  "thigh_c": {
+   "value": 117.0,
+   "unit": "N s/m",
+   "label": "c_w Oberschenkel",
+   "source": "Kong, Yeadon & King (Loughborough), core.ac.uk/download/288388973.pdf",
+   "status": "Literatur"
+  },
+  "trunk_c": {
+   "value": 76.0,
+   "unit": "N s/m",
+   "label": "c_w Rumpf",
+   "source": "Kong, Yeadon & King (Loughborough), core.ac.uk/download/288388973.pdf",
+   "status": "Literatur"
+  },
+  "scale_k_with_mass": {
+   "value": "ja",
+   "unit": "-",
+   "label": "k_w, c_w mit Massenverhältnis skalieren",
+   "source": "SPEC 5.5 (Skalierung auf Körpermasse)",
+   "status": "Eingabe",
+   "options": [
+    "ja",
+    "nein"
+   ]
+  }
+ },
+ "torque": {
+  "mtp_pos_tmax": {
+   "value": 30.0,
+   "unit": "Nm",
+   "label": "T_max Zehenstrecker (+θ)",
+   "source": "Schätzung, Größenordnung trainierter Springer:innen (beidseitig, Referenz 60 kg) → isokinetische Dynamometrie (SPEC 5.3)",
+   "status": "Schätzung",
+   "min": 0.0,
+   "max": 90.0
+  },
+  "mtp_neg_tmax": {
+   "value": 110.0,
+   "unit": "Nm",
+   "label": "T_max Zehenbeuger (−θ)",
+   "source": "Schätzung, Größenordnung trainierter Springer:innen (beidseitig, Referenz 60 kg) → isokinetische Dynamometrie (SPEC 5.3)",
+   "status": "Schätzung",
+   "min": 0.0,
+   "max": 330.0
+  },
+  "mtp_w0": {
+   "value": 20.0,
+   "unit": "rad/s",
+   "label": "ω₀ MTP",
+   "source": "Schätzung (Yeadon, King & Wilson 2006, Größenordnung)",
+   "status": "Schätzung"
+  },
+  "mtp_pos_opt": {
+   "value": 0.0,
+   "unit": "rad",
+   "label": "Optimalwinkel Zehenstrecker",
+   "source": "Schätzung",
+   "status": "Schätzung"
+  },
+  "mtp_neg_opt": {
+   "value": 0.3,
+   "unit": "rad",
+   "label": "Optimalwinkel Zehenbeuger",
+   "source": "Schätzung",
+   "status": "Schätzung"
+  },
+  "mtp_width": {
+   "value": 1.2,
+   "unit": "rad",
+   "label": "Breite Kraft-Winkel MTP",
+   "source": "Schätzung",
+   "status": "Schätzung"
+  },
+  "ankle_pos_tmax": {
+   "value": 120.0,
+   "unit": "Nm",
+   "label": "T_max Dorsalflexoren (+θ)",
+   "source": "Schätzung, Größenordnung trainierter Springer:innen (beidseitig, Referenz 60 kg) → isokinetische Dynamometrie (SPEC 5.3)",
+   "status": "Schätzung",
+   "min": 0.0,
+   "max": 360.0
+  },
+  "ankle_neg_tmax": {
+   "value": 450.0,
+   "unit": "Nm",
+   "label": "T_max Plantarflexoren (−θ)",
+   "source": "Schätzung, Größenordnung trainierter Springer:innen (beidseitig, Referenz 60 kg) → isokinetische Dynamometrie (SPEC 5.3)",
+   "status": "Schätzung",
+   "min": 0.0,
+   "max": 1350.0
+  },
+  "ankle_w0": {
+   "value": 25.0,
+   "unit": "rad/s",
+   "label": "ω₀ Sprunggelenk",
+   "source": "Schätzung (Yeadon, King & Wilson 2006, Größenordnung)",
+   "status": "Schätzung"
+  },
+  "ankle_pos_opt": {
+   "value": 0.0,
+   "unit": "rad",
+   "label": "Optimalwinkel Dorsalflexoren",
+   "source": "Schätzung",
+   "status": "Schätzung"
+  },
+  "ankle_neg_opt": {
+   "value": 0.1,
+   "unit": "rad",
+   "label": "Optimalwinkel Plantarflexoren",
+   "source": "Schätzung",
+   "status": "Schätzung"
+  },
+  "ankle_width": {
+   "value": 1.3,
+   "unit": "rad",
+   "label": "Breite Kraft-Winkel Sprunggelenk",
+   "source": "Schätzung",
+   "status": "Schätzung"
+  },
+  "knee_pos_tmax": {
+   "value": 250.0,
+   "unit": "Nm",
+   "label": "T_max Kniebeuger (+θ)",
+   "source": "Schätzung, Größenordnung trainierter Springer:innen (beidseitig, Referenz 60 kg) → isokinetische Dynamometrie (SPEC 5.3)",
+   "status": "Schätzung",
+   "min": 0.0,
+   "max": 750.0
+  },
+  "knee_neg_tmax": {
+   "value": 560.0,
+   "unit": "Nm",
+   "label": "T_max Kniestrecker (−θ)",
+   "source": "Schätzung, Größenordnung trainierter Springer:innen (beidseitig, Referenz 60 kg) → isokinetische Dynamometrie (SPEC 5.3)",
+   "status": "Schätzung",
+   "min": 0.0,
+   "max": 1680.0
+  },
+  "knee_w0": {
+   "value": 20.0,
+   "unit": "rad/s",
+   "label": "ω₀ Knie",
+   "source": "Schätzung (Yeadon, King & Wilson 2006, Größenordnung)",
+   "status": "Schätzung"
+  },
+  "knee_pos_opt": {
+   "value": 0.6,
+   "unit": "rad",
+   "label": "Optimalwinkel Kniebeuger",
+   "source": "Schätzung",
+   "status": "Schätzung"
+  },
+  "knee_neg_opt": {
+   "value": 1.1,
+   "unit": "rad",
+   "label": "Optimalwinkel Kniestrecker",
+   "source": "Schätzung",
+   "status": "Schätzung"
+  },
+  "knee_width": {
+   "value": 1.25,
+   "unit": "rad",
+   "label": "Breite Kraft-Winkel Knie",
+   "source": "Schätzung",
+   "status": "Schätzung"
+  },
+  "hip_pos_tmax": {
+   "value": 300.0,
+   "unit": "Nm",
+   "label": "T_max Hüftbeuger (+θ)",
+   "source": "Schätzung, Größenordnung trainierter Springer:innen (beidseitig, Referenz 60 kg) → isokinetische Dynamometrie (SPEC 5.3)",
+   "status": "Schätzung",
+   "min": 0.0,
+   "max": 900.0
+  },
+  "hip_neg_tmax": {
+   "value": 560.0,
+   "unit": "Nm",
+   "label": "T_max Hüftstrecker (−θ)",
+   "source": "Schätzung, Größenordnung trainierter Springer:innen (beidseitig, Referenz 60 kg) → isokinetische Dynamometrie (SPEC 5.3)",
+   "status": "Schätzung",
+   "min": 0.0,
+   "max": 1680.0
+  },
+  "hip_w0": {
+   "value": 15.0,
+   "unit": "rad/s",
+   "label": "ω₀ Hüfte",
+   "source": "Schätzung (Yeadon, King & Wilson 2006, Größenordnung)",
+   "status": "Schätzung"
+  },
+  "hip_pos_opt": {
+   "value": 0.6,
+   "unit": "rad",
+   "label": "Optimalwinkel Hüftbeuger",
+   "source": "Schätzung",
+   "status": "Schätzung"
+  },
+  "hip_neg_opt": {
+   "value": 1.0,
+   "unit": "rad",
+   "label": "Optimalwinkel Hüftstrecker",
+   "source": "Schätzung",
+   "status": "Schätzung"
+  },
+  "hip_width": {
+   "value": 1.4,
+   "unit": "rad",
+   "label": "Breite Kraft-Winkel Hüfte",
+   "source": "Schätzung",
+   "status": "Schätzung"
+  },
+  "shoulder_pos_tmax": {
+   "value": 170.0,
+   "unit": "Nm",
+   "label": "T_max Schulterflexoren (+θ)",
+   "source": "Schätzung, Größenordnung trainierter Springer:innen (beidseitig, Referenz 60 kg) → isokinetische Dynamometrie (SPEC 5.3)",
+   "status": "Schätzung",
+   "min": 0.0,
+   "max": 510.0
+  },
+  "shoulder_neg_tmax": {
+   "value": 170.0,
+   "unit": "Nm",
+   "label": "T_max Schulterextensoren (−θ)",
+   "source": "Schätzung, Größenordnung trainierter Springer:innen (beidseitig, Referenz 60 kg) → isokinetische Dynamometrie (SPEC 5.3)",
+   "status": "Schätzung",
+   "min": 0.0,
+   "max": 510.0
+  },
+  "shoulder_w0": {
+   "value": 20.0,
+   "unit": "rad/s",
+   "label": "ω₀ Schulter",
+   "source": "Schätzung (Yeadon, King & Wilson 2006, Größenordnung)",
+   "status": "Schätzung"
+  },
+  "shoulder_pos_opt": {
+   "value": 1.5,
+   "unit": "rad",
+   "label": "Optimalwinkel Schulterflexoren",
+   "source": "Schätzung",
+   "status": "Schätzung"
+  },
+  "shoulder_neg_opt": {
+   "value": 1.5,
+   "unit": "rad",
+   "label": "Optimalwinkel Schulterextensoren",
+   "source": "Schätzung",
+   "status": "Schätzung"
+  },
+  "shoulder_width": {
+   "value": 3.0,
+   "unit": "rad",
+   "label": "Breite Kraft-Winkel Schulter",
+   "source": "Schätzung",
+   "status": "Schätzung"
+  },
+  "elbow_pos_tmax": {
+   "value": 120.0,
+   "unit": "Nm",
+   "label": "T_max Ellbogenbeuger (+θ)",
+   "source": "Schätzung, Größenordnung trainierter Springer:innen (beidseitig, Referenz 60 kg) → isokinetische Dynamometrie (SPEC 5.3)",
+   "status": "Schätzung",
+   "min": 0.0,
+   "max": 360.0
+  },
+  "elbow_neg_tmax": {
+   "value": 100.0,
+   "unit": "Nm",
+   "label": "T_max Ellbogenstrecker (−θ)",
+   "source": "Schätzung, Größenordnung trainierter Springer:innen (beidseitig, Referenz 60 kg) → isokinetische Dynamometrie (SPEC 5.3)",
+   "status": "Schätzung",
+   "min": 0.0,
+   "max": 300.0
+  },
+  "elbow_w0": {
+   "value": 20.0,
+   "unit": "rad/s",
+   "label": "ω₀ Ellbogen",
+   "source": "Schätzung (Yeadon, King & Wilson 2006, Größenordnung)",
+   "status": "Schätzung"
+  },
+  "elbow_pos_opt": {
+   "value": 1.2,
+   "unit": "rad",
+   "label": "Optimalwinkel Ellbogenbeuger",
+   "source": "Schätzung",
+   "status": "Schätzung"
+  },
+  "elbow_neg_opt": {
+   "value": 1.2,
+   "unit": "rad",
+   "label": "Optimalwinkel Ellbogenstrecker",
+   "source": "Schätzung",
+   "status": "Schätzung"
+  },
+  "elbow_width": {
+   "value": 1.6,
+   "unit": "rad",
+   "label": "Breite Kraft-Winkel Ellbogen",
+   "source": "Schätzung",
+   "status": "Schätzung"
+  },
+  "gamma": {
+   "value": 3.0,
+   "unit": "-",
+   "label": "Γ Kraft-Geschwindigkeit (Gelenke)",
+   "source": "Schätzung (Selbie & Caldwell 1996, Form)",
+   "status": "Schätzung"
+  },
+  "ecc": {
+   "value": 1.5,
+   "unit": "-",
+   "label": "Exzentrisches Plateau (× T_max)",
+   "source": "Yeadon, King & Wilson (2006): 1,4–1,8",
+   "status": "Literatur",
+   "min": 1.0,
+   "max": 1.8
+  },
+  "mass_ref": {
+   "value": 60.0,
+   "unit": "kg",
+   "label": "Referenzmasse der T_max-Werte",
+   "source": "Schätzung",
+   "status": "Schätzung"
+  }
+ },
+ "rom": {
+  "mtp_min": {
+   "value": -0.6,
+   "unit": "rad",
+   "label": "ROM MTP min",
+   "source": "Schätzung (anatomische Normbereiche)",
+   "status": "Schätzung"
+  },
+  "mtp_max": {
+   "value": 1.1,
+   "unit": "rad",
+   "label": "ROM MTP max",
+   "source": "Schätzung (anatomische Normbereiche)",
+   "status": "Schätzung"
+  },
+  "ankle_min": {
+   "value": -0.9,
+   "unit": "rad",
+   "label": "ROM Sprunggelenk min",
+   "source": "Schätzung (anatomische Normbereiche)",
+   "status": "Schätzung"
+  },
+  "ankle_max": {
+   "value": 0.6,
+   "unit": "rad",
+   "label": "ROM Sprunggelenk max",
+   "source": "Schätzung (anatomische Normbereiche)",
+   "status": "Schätzung"
+  },
+  "knee_min": {
+   "value": 0.0,
+   "unit": "rad",
+   "label": "ROM Knie min",
+   "source": "Schätzung (anatomische Normbereiche)",
+   "status": "Schätzung"
+  },
+  "knee_max": {
+   "value": 2.4,
+   "unit": "rad",
+   "label": "ROM Knie max",
+   "source": "Schätzung (anatomische Normbereiche)",
+   "status": "Schätzung"
+  },
+  "hip_min": {
+   "value": -0.3,
+   "unit": "rad",
+   "label": "ROM Hüfte min",
+   "source": "Schätzung (anatomische Normbereiche)",
+   "status": "Schätzung"
+  },
+  "hip_max": {
+   "value": 2.3,
+   "unit": "rad",
+   "label": "ROM Hüfte max",
+   "source": "Schätzung (anatomische Normbereiche)",
+   "status": "Schätzung"
+  },
+  "shoulder_min": {
+   "value": -1.0,
+   "unit": "rad",
+   "label": "ROM Schulter min",
+   "source": "Schätzung (anatomische Normbereiche)",
+   "status": "Schätzung"
+  },
+  "shoulder_max": {
+   "value": 3.3,
+   "unit": "rad",
+   "label": "ROM Schulter max",
+   "source": "Schätzung (anatomische Normbereiche)",
+   "status": "Schätzung"
+  },
+  "elbow_min": {
+   "value": 0.0,
+   "unit": "rad",
+   "label": "ROM Ellbogen min",
+   "source": "Schätzung (anatomische Normbereiche)",
+   "status": "Schätzung"
+  },
+  "elbow_max": {
+   "value": 2.5,
+   "unit": "rad",
+   "label": "ROM Ellbogen max",
+   "source": "Schätzung (anatomische Normbereiche)",
+   "status": "Schätzung"
+  },
+  "k1": {
+   "value": 5.0,
+   "unit": "Nm",
+   "label": "Passiv-Moment Vorfaktor",
+   "source": "Schätzung",
+   "status": "Schätzung"
+  },
+  "k2": {
+   "value": 25.0,
+   "unit": "1/rad",
+   "label": "Passiv-Moment Exponent",
+   "source": "Schätzung",
+   "status": "Schätzung"
+  }
+ },
+ "posture": {
+  "mtp": {
+   "value": 0.35,
+   "unit": "rad",
+   "label": "MTP-Dorsalflexion bei TD (Ballenaufsatz)",
+   "source": "Schätzung → Video",
+   "status": "Schätzung",
+   "min": -0.3,
+   "max": 1.0
+  },
+  "ankle": {
+   "value": 0.05,
+   "unit": "rad",
+   "label": "Sprunggelenk bei TD (+ dorsal)",
+   "source": "Schätzung → Video (Miller 1974: Flexion nach TD)",
+   "status": "Schätzung",
+   "min": -0.8,
+   "max": 0.5
+  },
+  "knee": {
+   "value": 0.55,
+   "unit": "rad",
+   "label": "Kniebeugung bei TD",
+   "source": "Schätzung → Video",
+   "status": "Schätzung",
+   "min": 0.0,
+   "max": 1.8
+  },
+  "hip": {
+   "value": 0.45,
+   "unit": "rad",
+   "label": "Hüftbeugung bei TD",
+   "source": "Schätzung → Video",
+   "status": "Schätzung",
+   "min": -0.2,
+   "max": 1.8
+  },
+  "shoulder": {
+   "value": -0.4,
+   "unit": "rad",
+   "label": "Schulter bei TD (− = Arme hinten)",
+   "source": "Schätzung → Video",
+   "status": "Schätzung",
+   "min": -1.0,
+   "max": 3.2
+  },
+  "elbow": {
+   "value": 0.15,
+   "unit": "rad",
+   "label": "Ellbogen bei TD",
+   "source": "Schätzung → Video",
+   "status": "Schätzung",
+   "min": 0.0,
+   "max": 2.0
+  },
+  "shoulder_rate": {
+   "value": 6.0,
+   "unit": "rad/s",
+   "label": "Schulter-Winkelgeschw. bei TD (Armschwung)",
+   "source": "Schätzung → Video",
+   "status": "Schätzung",
+   "min": -10.0,
+   "max": 15.0
+  },
+  "align": {
+   "value": "ja",
+   "unit": "-",
+   "label": "Sprunggelenk bei TD aus KSP-Lage berechnen",
+   "source": "Modellannahme (KSP über Ballen ausgerichtet)",
+   "status": "Eingabe",
+   "options": [
+    "ja",
+    "nein"
+   ]
+  },
+  "com_offset": {
+   "value": -0.08,
+   "unit": "m",
+   "label": "KSP horizontal relativ zum Ballen bei TD (− = dahinter)",
+   "source": "Schätzung → Video",
+   "status": "Schätzung",
+   "min": -0.25,
+   "max": 0.25
+  }
+ },
+ "act2": {
+  "mtp_pos_a0": {
+   "value": 0.05,
+   "unit": "-",
+   "label": "Zehenstrecker: Voraktivierung",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": 0.0,
+   "max": 1.0
+  },
+  "mtp_pos_on": {
+   "value": 0.0,
+   "unit": "s",
+   "label": "Zehenstrecker: Onset rel. TD",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": -0.1,
+   "max": 0.4
+  },
+  "mtp_pos_rise": {
+   "value": 0.1,
+   "unit": "s",
+   "label": "Zehenstrecker: Anstiegszeit",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": 0.02,
+   "max": 0.4
+  },
+  "mtp_pos_ap": {
+   "value": 0.05,
+   "unit": "-",
+   "label": "Zehenstrecker: Plateau",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": 0.0,
+   "max": 1.0
+  },
+  "mtp_neg_a0": {
+   "value": 0.1,
+   "unit": "-",
+   "label": "Zehenbeuger: Voraktivierung",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": 0.0,
+   "max": 1.0
+  },
+  "mtp_neg_on": {
+   "value": 0.1,
+   "unit": "s",
+   "label": "Zehenbeuger: Onset rel. TD",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": -0.1,
+   "max": 0.4
+  },
+  "mtp_neg_rise": {
+   "value": 0.12,
+   "unit": "s",
+   "label": "Zehenbeuger: Anstiegszeit",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": 0.02,
+   "max": 0.4
+  },
+  "mtp_neg_ap": {
+   "value": 1.0,
+   "unit": "-",
+   "label": "Zehenbeuger: Plateau",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": 0.0,
+   "max": 1.0
+  },
+  "ankle_pos_a0": {
+   "value": 0.05,
+   "unit": "-",
+   "label": "Dorsalflexoren: Voraktivierung",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": 0.0,
+   "max": 1.0
+  },
+  "ankle_pos_on": {
+   "value": 0.0,
+   "unit": "s",
+   "label": "Dorsalflexoren: Onset rel. TD",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": -0.1,
+   "max": 0.4
+  },
+  "ankle_pos_rise": {
+   "value": 0.1,
+   "unit": "s",
+   "label": "Dorsalflexoren: Anstiegszeit",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": 0.02,
+   "max": 0.4
+  },
+  "ankle_pos_ap": {
+   "value": 0.05,
+   "unit": "-",
+   "label": "Dorsalflexoren: Plateau",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": 0.0,
+   "max": 1.0
+  },
+  "ankle_neg_a0": {
+   "value": 0.15,
+   "unit": "-",
+   "label": "Plantarflexoren: Voraktivierung",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": 0.0,
+   "max": 1.0
+  },
+  "ankle_neg_on": {
+   "value": 0.1,
+   "unit": "s",
+   "label": "Plantarflexoren: Onset rel. TD",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": -0.1,
+   "max": 0.4
+  },
+  "ankle_neg_rise": {
+   "value": 0.12,
+   "unit": "s",
+   "label": "Plantarflexoren: Anstiegszeit",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": 0.02,
+   "max": 0.4
+  },
+  "ankle_neg_ap": {
+   "value": 1.0,
+   "unit": "-",
+   "label": "Plantarflexoren: Plateau",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": 0.0,
+   "max": 1.0
+  },
+  "knee_pos_a0": {
+   "value": 0.05,
+   "unit": "-",
+   "label": "Kniebeuger: Voraktivierung",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": 0.0,
+   "max": 1.0
+  },
+  "knee_pos_on": {
+   "value": 0.0,
+   "unit": "s",
+   "label": "Kniebeuger: Onset rel. TD",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": -0.1,
+   "max": 0.4
+  },
+  "knee_pos_rise": {
+   "value": 0.1,
+   "unit": "s",
+   "label": "Kniebeuger: Anstiegszeit",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": 0.02,
+   "max": 0.4
+  },
+  "knee_pos_ap": {
+   "value": 0.05,
+   "unit": "-",
+   "label": "Kniebeuger: Plateau",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": 0.0,
+   "max": 1.0
+  },
+  "knee_neg_a0": {
+   "value": 0.1,
+   "unit": "-",
+   "label": "Kniestrecker: Voraktivierung",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": 0.0,
+   "max": 1.0
+  },
+  "knee_neg_on": {
+   "value": 0.09,
+   "unit": "s",
+   "label": "Kniestrecker: Onset rel. TD",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": -0.1,
+   "max": 0.4
+  },
+  "knee_neg_rise": {
+   "value": 0.12,
+   "unit": "s",
+   "label": "Kniestrecker: Anstiegszeit",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": 0.02,
+   "max": 0.4
+  },
+  "knee_neg_ap": {
+   "value": 1.0,
+   "unit": "-",
+   "label": "Kniestrecker: Plateau",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": 0.0,
+   "max": 1.0
+  },
+  "hip_pos_a0": {
+   "value": 0.05,
+   "unit": "-",
+   "label": "Hüftbeuger: Voraktivierung",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": 0.0,
+   "max": 1.0
+  },
+  "hip_pos_on": {
+   "value": 0.0,
+   "unit": "s",
+   "label": "Hüftbeuger: Onset rel. TD",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": -0.1,
+   "max": 0.4
+  },
+  "hip_pos_rise": {
+   "value": 0.1,
+   "unit": "s",
+   "label": "Hüftbeuger: Anstiegszeit",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": 0.02,
+   "max": 0.4
+  },
+  "hip_pos_ap": {
+   "value": 0.05,
+   "unit": "-",
+   "label": "Hüftbeuger: Plateau",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": 0.0,
+   "max": 1.0
+  },
+  "hip_neg_a0": {
+   "value": 0.1,
+   "unit": "-",
+   "label": "Hüftstrecker: Voraktivierung",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": 0.0,
+   "max": 1.0
+  },
+  "hip_neg_on": {
+   "value": 0.07,
+   "unit": "s",
+   "label": "Hüftstrecker: Onset rel. TD",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": -0.1,
+   "max": 0.4
+  },
+  "hip_neg_rise": {
+   "value": 0.12,
+   "unit": "s",
+   "label": "Hüftstrecker: Anstiegszeit",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": 0.02,
+   "max": 0.4
+  },
+  "hip_neg_ap": {
+   "value": 1.0,
+   "unit": "-",
+   "label": "Hüftstrecker: Plateau",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": 0.0,
+   "max": 1.0
+  },
+  "shoulder_pos_a0": {
+   "value": 0.6,
+   "unit": "-",
+   "label": "Schulterflexoren: Voraktivierung",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": 0.0,
+   "max": 1.0
+  },
+  "shoulder_pos_on": {
+   "value": -0.05,
+   "unit": "s",
+   "label": "Schulterflexoren: Onset rel. TD",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": -0.1,
+   "max": 0.4
+  },
+  "shoulder_pos_rise": {
+   "value": 0.1,
+   "unit": "s",
+   "label": "Schulterflexoren: Anstiegszeit",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": 0.02,
+   "max": 0.4
+  },
+  "shoulder_pos_ap": {
+   "value": 1.0,
+   "unit": "-",
+   "label": "Schulterflexoren: Plateau",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": 0.0,
+   "max": 1.0
+  },
+  "shoulder_neg_a0": {
+   "value": 0.0,
+   "unit": "-",
+   "label": "Schulterextensoren: Voraktivierung",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": 0.0,
+   "max": 1.0
+  },
+  "shoulder_neg_on": {
+   "value": 0.0,
+   "unit": "s",
+   "label": "Schulterextensoren: Onset rel. TD",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": -0.1,
+   "max": 0.4
+  },
+  "shoulder_neg_rise": {
+   "value": 0.1,
+   "unit": "s",
+   "label": "Schulterextensoren: Anstiegszeit",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": 0.02,
+   "max": 0.4
+  },
+  "shoulder_neg_ap": {
+   "value": 0.0,
+   "unit": "-",
+   "label": "Schulterextensoren: Plateau",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": 0.0,
+   "max": 1.0
+  },
+  "elbow_pos_a0": {
+   "value": 0.1,
+   "unit": "-",
+   "label": "Ellbogenbeuger: Voraktivierung",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": 0.0,
+   "max": 1.0
+  },
+  "elbow_pos_on": {
+   "value": 0.0,
+   "unit": "s",
+   "label": "Ellbogenbeuger: Onset rel. TD",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": -0.1,
+   "max": 0.4
+  },
+  "elbow_pos_rise": {
+   "value": 0.1,
+   "unit": "s",
+   "label": "Ellbogenbeuger: Anstiegszeit",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": 0.02,
+   "max": 0.4
+  },
+  "elbow_pos_ap": {
+   "value": 0.1,
+   "unit": "-",
+   "label": "Ellbogenbeuger: Plateau",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": 0.0,
+   "max": 1.0
+  },
+  "elbow_neg_a0": {
+   "value": 0.05,
+   "unit": "-",
+   "label": "Ellbogenstrecker: Voraktivierung",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": 0.0,
+   "max": 1.0
+  },
+  "elbow_neg_on": {
+   "value": 0.0,
+   "unit": "s",
+   "label": "Ellbogenstrecker: Onset rel. TD",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": -0.1,
+   "max": 0.4
+  },
+  "elbow_neg_rise": {
+   "value": 0.1,
+   "unit": "s",
+   "label": "Ellbogenstrecker: Anstiegszeit",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": 0.02,
+   "max": 0.4
+  },
+  "elbow_neg_ap": {
+   "value": 0.05,
+   "unit": "-",
+   "label": "Ellbogenstrecker: Plateau",
+   "source": "Schätzung → Optimierung (Etappe 5)",
+   "status": "Schätzung",
+   "min": 0.0,
+   "max": 1.0
+  }
+ }
 }

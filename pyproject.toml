@@ -1,12 +1,12 @@
 [project]
 name = "diving-sim"
-version = "0.1.0"
+version = "0.2.0"
 description = "3D-Biomechanik-Simulator Anlauf & Absprung 3m-Brett (SPEC.md)"
-requires-python = ">=3.12"
-dependencies = ["numpy>=1.26", "scipy>=1.11", "pydantic>=2.6", "fastapi>=0.110"]
+requires-python = ">=3.10"
+dependencies = ["numpy>=2.0", "scipy>=1.11", "pydantic>=2.6", "fastapi>=0.110", "uvicorn>=0.29"]
 
 [project.optional-dependencies]
-dev = ["pytest>=8", "hypothesis>=6", "httpx>=0.27", "uvicorn>=0.29"]
+dev = ["pytest>=8", "hypothesis>=6", "httpx>=0.27", "sympy>=1.12"]
 
 [tool.pytest.ini_options]
 testpaths = ["core/tests", "api"]
@@ -17,3 +17,6 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 include = ["core*", "api*", "scripts*"]
+
+[tool.setuptools.package-data]
+api = ["static/*.html"]

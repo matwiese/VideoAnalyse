@@ -57,20 +57,27 @@ def metric_status(group: str, p: ParamSet, macros: dict[str, list[str]]) -> tupl
     return p.status(worst), est
 
 
+def deps_for_level(group: str, level: int) -> str:
+    """Level 2 nutzt eigene Abhängigkeitsgruppen (Gelenkmodell statt Bein-Aktuator)."""
+    if level >= 2 and group in ("sim", "sim_flight"):
+        return group.replace("sim", "sim2")
+    return group
+
+
 def metric_rows(metrics: dict[str, Any], p: ParamSet, level: int = 1) -> list[dict[str, Any]]:
     info = load_metric_info()
     macros = info["_meta"]["deps"]
     rows = []
     for m in info["metrics"]:
         val = metrics.get(m["key"])
-        if m.get("level_min", 1) > level or val is None:
+        if m.get("level_min", 1) > level or val is None or (isinstance(val, float) and math.isnan(val) and m.get("level_min", 1) > 1):
             rows.append({**m, "value": None, "text": f"– (ab Level {m.get('level_min', 2)})", "status": "n/a", "estimates": []})
             continue
         v = val * m.get("scale", 1)
         if m["key"] in ("z_b_min",):
             v = abs(v)
         text = "–" if (isinstance(v, float) and math.isnan(v)) else f"{v:.{m.get('fmt', 3)}f}"
-        status, est = metric_status(m["deps"], p, macros)
+        status, est = metric_status(deps_for_level(m["deps"], level), p, macros)
         rows.append({**m, "value": v, "text": text, "status": status, "estimates": est})
     return rows
 

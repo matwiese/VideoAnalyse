@@ -31,9 +31,14 @@ export function resolveDeps(group: string, v: ParamValues): string[] {
 
 export type MetricStatus = Status | 'Berechnet' | 'n/a';
 
+/** Level 2 nutzt eigene Abhängigkeitsgruppen (wie core/report.py deps_for_level). */
+export function depsForLevel(group: string, level: number): string {
+  return level >= 2 && (group === 'sim' || group === 'sim_flight') ? group.replace('sim', 'sim2') : group;
+}
+
 export function metricStatus(m: MetricInfo, v: ParamValues, st: Record<string, Status>, level = 1): { status: MetricStatus; estimates: string[] } {
   if ((m.level_min ?? 1) > level) return { status: 'n/a', estimates: [] };
-  const deps = resolveDeps(m.deps, v);
+  const deps = resolveDeps(depsForLevel(m.deps, level), v);
   if (deps.length === 0) return { status: 'Berechnet', estimates: [] };
   let worst: Status = 'Eingabe';
   for (const k of deps) if (RANK[st[k]] > RANK[worst]) worst = st[k];

@@ -32,6 +32,13 @@ export const GROUP_LABELS: Record<string, string> = {
   activation: 'Aktivierung',
   flight: 'Flug / Rotation',
   numerics: 'Numerik',
+  posture: 'Haltung bei Touchdown (Level 2)',
+  contact: 'Fuß-Brett-Kontakt (Level 2)',
+  torque: 'Drehmoment-Generatoren (Level 2)',
+  act2: 'Aktivierung je Generator (Level 2)',
+  rom: 'Gelenkbereiche (Level 2)',
+  body: 'Körpergeometrie (Level 2)',
+  wobble: 'Schwabbelmassen (Level 2)',
 };
 
 function flatten(): ParamSpec[] {

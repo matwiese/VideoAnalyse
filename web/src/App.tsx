@@ -3,6 +3,7 @@ import { ProfileSchema, PRESETS, type Profile } from './lib/params';
 import { ChartTabs } from './panels/ChartTabs';
 import { MetricsPanel } from './panels/MetricsPanel';
 import { ParamPanel } from './panels/ParamPanel';
+import { OptPanel } from './panels/OptPanel';
 import { StudyPanel } from './panels/StudyPanel';
 import { Timeline } from './panels/Timeline';
 import { Scene, type CamPreset } from './scene/Scene';
@@ -18,12 +19,26 @@ function download(name: string, content: BlobPart, type: string) {
 }
 
 function exportCsv() {
-  const r = useStore.getState().result;
-  if (!r) return;
-  const s = r.series;
+  const v = useStore.getState().view;
+  if (!v) return;
+  const lines: string[] = [];
+  if (v.level === 2 && v.l2) {
+    const s = v.l2.series;
+    const J = ['mtp', 'ankle', 'knee', 'hip', 'shoulder', 'elbow'];
+    const head = ['t [s]', 'Fz [N]', 'Fx [N]', 'z_b [m]', 'v_b [m/s]', 'x_KSP [m]', 'z_KSP [m]', 'vx_KSP [m/s]', 'vz_KSP [m/s]',
+      ...J.map((j) => `theta_${j} [rad]`), ...J.map((j) => `omega_${j} [rad/s]`), ...J.map((j) => `tau_${j} [Nm]`), ...J.map((j) => `P_${j} [W]`)];
+    lines.push(head.join(';'));
+    for (let i = 0; i < s.t.length; i++) {
+      lines.push([s.t[i], s.Fz[i], s.Fx[i], s.z_b[i], s.v_b[i], ...s.com[i], ...s.theta[i], ...s.omega[i], ...s.tau_net[i], ...s.power[i]]
+        .map((x) => Number(x).toPrecision(8)).join(';'));
+    }
+    download('level2_kontaktphase_1kHz.csv', lines.join('\n'), 'text/csv');
+    return;
+  }
+  const s = v.l1!.series;
   const cols = ['t', 'z_c', 'x_c', 'v_c', 'z_b', 'x_b', 'v_b', 'F', 'act', 'E_kin', 'E_pot', 'E_board', 'E_leg', 'W_act', 'D_loss'] as const;
   const units = ['s', 'm', 'm', 'm/s', 'm', 'm', 'm/s', 'N', '-', 'J', 'J', 'J', 'J', 'J', 'J'];
-  const lines = [cols.map((c, i) => `${c} [${units[i]}]`).join(';')];
+  lines.push(cols.map((c, i) => `${c} [${units[i]}]`).join(';'));
   for (let i = 0; i < s.t.length; i++) lines.push(cols.map((c) => s[c][i].toPrecision(8)).join(';'));
   download('level1_zeitverlauf_1kHz.csv', lines.join('\n'), 'text/csv');
 }
@@ -41,8 +56,12 @@ function exportPng() {
 }
 
 export function App() {
-  const view = useStore((s) => s.view);
-  const setView = useStore((s) => s.setView);
+  const page = useStore((s) => s.page);
+  const setPage = useStore((s) => s.setPage);
+  const level = useStore((s) => s.level);
+  const setLevel = useStore((s) => s.setLevel);
+  const backend = useStore((s) => s.backend);
+  const busy = useStore((s) => s.busy);
   const error = useStore((s) => s.error);
   const computeMs = useStore((s) => s.computeMs);
   const roundtripMs = useStore((s) => s.roundtripMs);
@@ -69,9 +88,20 @@ export function App() {
       <header className="topbar">
         <div className="brand"><span className="dot" />3m-Brett-Simulator <span className="sub">Anlauf · Hürde · Brettkontakt · Flug</span></div>
         <nav className="seg" aria-label="Ansicht">
-          <button type="button" className={view === 'sim' ? 'active' : ''} onClick={() => setView('sim')} aria-pressed={view === 'sim'}>Simulation</button>
-          <button type="button" className={view === 'study' ? 'active' : ''} onClick={() => setView('study')} aria-pressed={view === 'study'}>Parameterstudie</button>
+          <button type="button" className={page === 'sim' ? 'active' : ''} onClick={() => setPage('sim')} aria-pressed={page === 'sim'}>Simulation</button>
+          <button type="button" className={page === 'study' ? 'active' : ''} onClick={() => setPage('study')} aria-pressed={page === 'study'}>Parameterstudie</button>
+          <button type="button" className={page === 'opt' ? 'active' : ''} onClick={() => setPage('opt')} aria-pressed={page === 'opt'}>Optimierung</button>
         </nav>
+        <nav className="seg" aria-label="Modell-Level">
+          <button type="button" className={level === 1 ? 'active' : ''} onClick={() => setLevel(1)} title="Zwei-Massen-Modell, rechnet live im Browser">Level 1</button>
+          <button type="button" className={level === 2 ? 'active' : ''} onClick={() => setLevel(2)} disabled={!backend}
+            title={backend ? 'Planares Mehrkörpermodell (8 Segmente, Gelenkmomente, Rotation) – rechnet im Backend, ca. 2–7 s' : 'Level 2 braucht die Vollversion: python -m api (siehe README)'}>
+            Level 2{busy ? ' …' : ''}
+          </button>
+        </nav>
+        <span className={`backend-dot ${backend ? 'on' : 'off'}`} title={backend ? 'Rechenkern verbunden (Vollversion)' : 'Ohne Rechenkern: nur Level 1 (Einzeldatei-Modus)'}>
+          {backend ? 'Vollversion' : backend === false ? 'Browser-Version' : '…'}
+        </span>
         <div className="actions">
           <span className={`perf mono ${roundtripMs > 50 ? 'slow' : ''}`} title="Rechenzeit im Web Worker / Antwortzeit Slider → Ergebnis (Ziel < 50 ms)">
             {computeMs.toFixed(0)} ms · {roundtripMs.toFixed(0)} ms
@@ -92,7 +122,7 @@ export function App() {
       <main className="layout">
         <ParamPanel />
         <section className="center">
-          {view === 'sim' ? (
+          {page === 'sim' ? (
             <>
               <div className="scene">
                 <Scene preset={cam} />
@@ -115,13 +145,15 @@ export function App() {
                     ))}
                   </div>
                 </div>
-                <div className="scene-note">Figur = Visualisierung des Level-1-Punktmassenmodells (KSP & Beinlänge simuliert, Gelenke/Arme illustrativ)</div>
+                <div className="scene-note">{level === 2 ? 'Level 2: simulierte Segmentkette; im Flug Haltung ab TO eingefroren, Rotation ω = H/I' : 'Figur = Visualisierung des Level-1-Punktmassenmodells (KSP & Beinlänge simuliert, Gelenke/Arme illustrativ)'}</div>
               </div>
               <Timeline />
               <ChartTabs />
             </>
-          ) : (
+          ) : page === 'study' ? (
             <StudyPanel />
+          ) : (
+            <OptPanel />
           )}
         </section>
         <MetricsPanel />

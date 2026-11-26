@@ -9,7 +9,7 @@ export default defineConfig({
   plugins: [react()],
   base: './',
   resolve: { alias: { '@data': dataDir } },
-  server: { fs: { allow: ['..'] } },
+  server: { fs: { allow: ['..'] }, proxy: { '/api': 'http://127.0.0.1:8000' } },
   worker: { format: 'es' },
   build: { chunkSizeWarningLimit: 1500 },
   test: { environment: 'node', include: ['src/**/*.test.ts'] },

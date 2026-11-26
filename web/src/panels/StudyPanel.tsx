@@ -6,7 +6,9 @@ import { METRICS, METRIC_BY_KEY, PARAMS, PARAM_BY_KEY, rangeOf } from '../lib/pa
 import { useStore } from '../store';
 
 const SWEEPABLE = PARAMS.filter((p) => !p.options && !p.key.startsWith('numerics.') && p.min !== undefined && p.max !== undefined);
-const OUTPUTS = METRICS.filter((m) => !m.level_min && m.key !== 'energy_balance_rel');
+const OUTPUTS_L1 = METRICS.filter((m) => !m.level_min && m.key !== 'energy_balance_rel');
+const L2_OUT = ['h_max_board', 'v_z_to', 'v_x_to', 'rotation_potential', 'H_y', 'x_board_plane', 'x_body_board_plane', 't_contact', 'F_peak_bw', 'knee_omega_to', 'knee_angle_to_deg', 'hip_torque_peak'];
+const OUTPUTS_L2 = METRICS.filter((m) => L2_OUT.includes(m.key));
 
 function linspace(a: number, b: number, n: number): number[] {
   return Array.from({ length: n }, (_, i) => +(a + ((b - a) * i) / (n - 1)).toPrecision(8));
@@ -23,6 +25,10 @@ export function StudyPanel() {
   const progress = useStore((s) => s.studyProgress);
   const run1 = useStore((s) => s.runSweep1d);
   const run2 = useStore((s) => s.runSweep2d);
+  const backend = useStore((s) => s.backend);
+  const [lvl, setLvl] = useState<1 | 2>(1);
+  const OUTPUTS = lvl === 2 ? OUTPUTS_L2 : OUTPUTS_L1;
+  const nMax = lvl === 2 ? 15 : 41;
   const [mode, setMode] = useState<'1d' | '2d'>('2d');
   const [kx, setKx] = useState('board.fulcrum');
   const [ky, setKy] = useState('athlete.mass');
@@ -40,8 +46,9 @@ export function StudyPanel() {
   const busy = progress > 0 && progress < 1;
 
   const start = () => {
-    if (mode === '1d') run1(kx, linspace(xr[0], xr[1], n), metrics1d);
-    else run2(kx, linspace(xr[0], xr[1], n), ky, linspace(yr[0], yr[1], n), metric);
+    const nn = Math.min(n, nMax);
+    if (mode === '1d') run1(kx, linspace(xr[0], xr[1], nn), metrics1d, lvl);
+    else run2(kx, linspace(xr[0], xr[1], nn), ky, linspace(yr[0], yr[1], nn), metric, lvl);
   };
 
   const chart = useMemo(() => {
@@ -87,6 +94,11 @@ export function StudyPanel() {
           <button type="button" className={mode === '1d' ? 'active' : ''} onClick={() => setMode('1d')} aria-pressed={mode === '1d'}>1D-Sweep</button>
           <button type="button" className={mode === '2d' ? 'active' : ''} onClick={() => setMode('2d')} aria-pressed={mode === '2d'}>2D-Heatmap</button>
         </div>
+        <div className="seg" role="radiogroup" aria-label="Modell-Level">
+          <button type="button" className={lvl === 1 ? 'active' : ''} onClick={() => setLvl(1)}>Level 1 · Browser</button>
+          <button type="button" className={lvl === 2 ? 'active' : ''} onClick={() => backend && setLvl(2)} disabled={!backend}
+            title={backend ? 'Mehrkörpermodell im Backend, ca. 1–2 s je Simulation pro Kern' : 'Nur in der Vollversion (python -m api)'}>Level 2 · Backend</button>
+        </div>
         <label>X-Parameter {paramSelect(kx, setKx, () => setRx(null), 'kx')}</label>
         <label className="pair">von <input type="number" value={xr[0]} onChange={(e) => setRx([Number(e.target.value), xr[1]])} /> bis <input type="number" value={xr[1]} onChange={(e) => setRx([xr[0], Number(e.target.value)])} /> {px.unit}</label>
         {mode === '2d' && <>
@@ -101,7 +113,7 @@ export function StudyPanel() {
         {mode === '1d' && (
           <fieldset className="multi">
             <legend>Zielgrößen</legend>
-            {['h_max_board', 'v_z_to', 'F_peak_bw', 'z_b_min', 't_contact', 'x_board_plane', 'W_act'].map((k) => (
+            {(lvl === 2 ? ['h_max_board', 'v_z_to', 'v_x_to', 'rotation_potential', 'x_body_board_plane', 't_contact', 'F_peak_bw'] : ['h_max_board', 'v_z_to', 'F_peak_bw', 'z_b_min', 't_contact', 'x_board_plane', 'W_act']).map((k) => (
               <label key={k} className="check">
                 <input type="checkbox" checked={metrics1d.includes(k)} onChange={(e) => setMetrics1d(e.target.checked ? [...metrics1d, k] : metrics1d.filter((x) => x !== k))} />
                 {METRIC_BY_KEY[k].label}
@@ -109,9 +121,10 @@ export function StudyPanel() {
             ))}
           </fieldset>
         )}
-        <label>Stützstellen je Achse <input type="number" min={3} max={41} value={n} onChange={(e) => setN(Math.min(41, Math.max(3, Number(e.target.value))))} /></label>
+        <label>Stützstellen je Achse (max. {nMax}) <input type="number" min={3} max={nMax} value={n} onChange={(e) => setN(Math.min(41, Math.max(3, Number(e.target.value))))} /></label>
+        {lvl === 2 && <div className="footnote">Level 2: {mode === '2d' ? Math.min(n, nMax) ** 2 : Math.min(n, nMax)} Simulationen à ~4–7 s, parallel auf allen CPU-Kernen.</div>}
         <button type="button" className="btn primary" onClick={start} disabled={busy}>{busy ? `Rechne … ${(progress * 100).toFixed(0)} %` : 'Studie starten'}</button>
-        <div className="footnote">Alle übrigen Parameter wie im linken Panel. Level 1 im Web Worker; Ergebnisse tragen den Status der Eingangsparameter (meist Schätzung).</div>
+        <div className="footnote">Alle übrigen Parameter wie im linken Panel. Ergebnisse tragen den Status der Eingangsparameter (meist Schätzung).</div>
       </div>
       <div className="study-out">{chart ?? <div className="placeholder">Noch keine Studie. Beispiel: Fulkrum × Körpermasse → max. Flughöhe.</div>}</div>
     </div>

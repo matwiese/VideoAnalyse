@@ -1,0 +1,32 @@
+{
+ "baseline": {
+  "hip_act_flex_peak": 10.68092796315574,
+  "hip_act_ext_peak": -181.1965412465298,
+  "hip_pas_peak": 1196.964403080738,
+  "hip_act_flex_impulse": 1.0619898143980597,
+  "hip_pas_flex_impulse": 41.81914359180318,
+  "knee_ext_vel_to": 2.793960226434612,
+  "knee_angle_to": -6.158412332303798,
+  "hip_angle_min": -29.743628119236593
+ },
+ "height": {
+  "hip_act_flex_peak": 5.220868181540192,
+  "hip_act_ext_peak": -274.60997774890507,
+  "hip_pas_peak": 0.6728313179990658,
+  "hip_act_flex_impulse": 0.033479024898830034,
+  "hip_pas_flex_impulse": 0.014559387037984112,
+  "knee_ext_vel_to": -0.321822098689391,
+  "knee_angle_to": -7.625223923776159,
+  "hip_angle_min": -12.592011412473799
+ },
+ "rotation": {
+  "hip_act_flex_peak": 11.623523243609796,
+  "hip_act_ext_peak": -380.4460662152799,
+  "hip_pas_peak": 1242.0532371816103,
+  "hip_act_flex_impulse": 1.8336802199626465,
+  "hip_pas_flex_impulse": 70.82411231660787,
+  "knee_ext_vel_to": -2.579785882501788,
+  "knee_angle_to": -4.7928053680049425,
+  "hip_angle_min": -29.828373525153843
+ }
+}
