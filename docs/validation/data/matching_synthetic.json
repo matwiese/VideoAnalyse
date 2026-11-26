@@ -1,93 +1,125 @@
 {
- "score": 12.055943025735044,
- "baseline": 41.640686502827585,
+ "score": 9.98760295228423,
+ "baseline": 41.69629148618593,
  "components": {
-  "Gelenkwinkel": 19.40125728136796,
-  "Rumpforientierung": 11.09516582703943,
-  "Linearimpuls TO": 9.18034351683731,
-  "Drehimpuls TO": 9.216434770636305,
-  "Kontaktdauer": 7.615506903875777
+  "Gelenkwinkel": 17.803842449585158,
+  "Rumpforientierung": 9.857668862581143,
+  "Linearimpuls TO": 6.903626842275052,
+  "Drehimpuls TO": 4.197038490026586,
+  "Kontaktdauer": 4.397206684281028
  },
  "factors": {
-  "torque.ankle_neg_tmax": 2.1876398937127006,
-  "torque.knee_neg_tmax": 1.4182249910822768,
-  "torque.hip_neg_tmax": 0.9824390775994455,
-  "torque.shoulder_pos_tmax": 1.0488306224924882,
-  "torque.mtp_neg_tmax": 1.4789135814854388
+  "torque.ankle_neg_tmax": 1.7618097394094843,
+  "torque.knee_neg_tmax": 1.2955137483188208,
+  "torque.hip_neg_tmax": 1.2046468326187316,
+  "torque.shoulder_pos_tmax": 0.8137858679460948,
+  "torque.mtp_neg_tmax": 0.7483818230166508
  },
  "values": {
-  "torque.ankle_neg_tmax": 984.4379521707152,
-  "torque.knee_neg_tmax": 794.205995006075,
-  "torque.hip_neg_tmax": 550.1658834556895,
-  "torque.shoulder_pos_tmax": 178.301205823723,
-  "torque.mtp_neg_tmax": 162.68049396339828,
-  "act2.ankle_neg_on": 0.15591152876256606,
-  "act2.knee_neg_on": 0.05921092598698055,
-  "act2.hip_neg_on": 0.04382938345701326,
-  "act2.shoulder_pos_on": -0.026700294440262784,
-  "act2.ankle_neg_rise": 0.13132679145883028,
-  "act2.knee_neg_rise": 0.14219769779876223,
-  "act2.hip_neg_rise": 0.0986662216973461,
-  "init.ankle_dq": -0.024107558454612696,
-  "init.knee_dq": -0.020044829754511093,
-  "init.hip_dq": -0.008326913834849056,
-  "init.ankle_du": 0.5252296967506096,
-  "init.knee_du": 0.9206091718294402,
-  "init.hip_du": 0.5176837268216126,
-  "init.shoulder_du": 0.7392663019250181
+  "torque.ankle_neg_tmax": 792.814382734268,
+  "torque.knee_neg_tmax": 725.4876990585396,
+  "torque.hip_neg_tmax": 674.6022262664898,
+  "torque.shoulder_pos_tmax": 138.3435975508361,
+  "torque.mtp_neg_tmax": 82.32200053183159,
+  "act2.ankle_neg_on": 0.27045605572683196,
+  "act2.knee_neg_on": 0.053037807537737514,
+  "act2.hip_neg_on": 0.08826221516331925,
+  "act2.shoulder_pos_on": 0.0062812426059319915,
+  "act2.ankle_neg_rise": 0.22794653777490523,
+  "act2.knee_neg_rise": 0.14064603212125298,
+  "act2.hip_neg_rise": 0.12020676249747597,
+  "init.ankle_dq": -0.02111110006226388,
+  "init.knee_dq": 0.001040690492245401,
+  "init.hip_dq": 0.018832635107806042,
+  "init.ankle_du": 0.5332932027604049,
+  "init.knee_du": 0.6893506628670556,
+  "init.hip_du": -0.18395608913768235,
+  "init.shoulder_du": 0.3351673323244482
  },
  "history": [
   {
    "generation": 0,
-   "best": 41.640686502827585
+   "best": 41.69629148618593
   },
   {
    "generation": 1,
-   "best": 41.640686502827585
+   "best": 41.69629148618593
   },
   {
    "generation": 2,
-   "best": 23.092412622182348
+   "best": 20.198930036686136
   },
   {
    "generation": 3,
-   "best": 18.38936363391995
+   "best": 14.097561682195833
   },
   {
    "generation": 4,
-   "best": 16.69736504714245
+   "best": 14.097561682195833
   },
   {
    "generation": 5,
-   "best": 16.69736504714245
+   "best": 14.097561682195833
   },
   {
    "generation": 6,
-   "best": 16.69736504714245
+   "best": 13.810772147542563
   },
   {
    "generation": 7,
-   "best": 16.69736504714245
+   "best": 13.810772147542563
   },
   {
    "generation": 8,
-   "best": 12.055943025735044
+   "best": 13.810772147542563
   },
   {
    "generation": 9,
-   "best": 12.055943025735044
+   "best": 13.810772147542563
   },
   {
    "generation": 10,
-   "best": 12.055943025735044
+   "best": 11.557267527039722
   },
   {
    "generation": 11,
-   "best": 12.055943025735044
+   "best": 11.557267527039722
   },
   {
    "generation": 12,
-   "best": 12.055943025735044
+   "best": 11.557267527039722
+  },
+  {
+   "generation": 13,
+   "best": 11.557267527039722
+  },
+  {
+   "generation": 14,
+   "best": 11.557267527039722
+  },
+  {
+   "generation": 15,
+   "best": 11.557267527039722
+  },
+  {
+   "generation": 16,
+   "best": 9.98760295228423
+  },
+  {
+   "generation": 17,
+   "best": 9.98760295228423
+  },
+  {
+   "generation": 18,
+   "best": 9.98760295228423
+  },
+  {
+   "generation": 19,
+   "best": 9.98760295228423
+  },
+  {
+   "generation": 20,
+   "best": 9.98760295228423
   }
  ]
 }
