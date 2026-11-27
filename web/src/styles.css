@@ -192,3 +192,8 @@ input[type='file'] { color: var(--text-2); font-size: 12px; }
 .point .cnt { margin-left: auto; font-size: 11px; }
 .file-btn { display: inline-flex; align-items: center; cursor: pointer; }
 @media (max-width: 1100px) { .tracker { grid-template-columns: 1fr; } }
+.zoom-bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.zoom-bar .zoom-val { min-width: 44px; text-align: center; }
+.zoom-bar .check { display: inline-flex; gap: 4px; align-items: center; color: var(--text-2); font-size: 12px; }
+.zoom-bar .footnote { margin: 0; }
+.tracker-canvas canvas { display: block; }

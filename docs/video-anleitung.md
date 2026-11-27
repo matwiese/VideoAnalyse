@@ -32,7 +32,7 @@ Dateien mit mehreren GB funktionieren, weil der Browser direkt von der Festplatt
 3. **Kalibrierung:** „Maßstab: 2 Punkte klicken“ an einem Meterstab/bekannter Strecke in der
    Brettebene, Länge eintragen (waagrechte Strecke → Haken für Neigungskorrektur);
    „Brettspitze in Ruhe klicken“ in einem Bild ohne Springer:in auf dem Brett; Wasserseite wählen.
-4. **Punkte:** Punkt links wählen, im Bild anklicken (Lupe oben rechts hilft), dann
+4. **Punkte:** Punkt links wählen, mit dem Mausrad hineinzoomen (bis 16×, Ziehen verschiebt, „Ansicht folgt Punkt“ führt mit), im Bild anklicken, dann
    **„Automatisch weiter“** – die App verfolgt den Punkt per Bildvergleich und hält an, sobald sie
    unsicher ist (dann Punkt anklicken und erneut starten). Tasten: ← → Bild, Enter = Vorschlag
    übernehmen, Entf = löschen. Klebepunkte machen die Automatik deutlich zuverlässiger.

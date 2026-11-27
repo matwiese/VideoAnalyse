@@ -94,8 +94,13 @@ export function TrackerPanel() {
   const [patchHalf, setPatchHalf] = useState(12);
   const [running, setRunning] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
-  const [scale, setScale] = useState(1);
+  const [scale, setScale] = useState(1); // Einpass-Maßstab [Bildschirm-px / Video-px]
+  const [zoom, setZoom] = useState(1); // zusätzlicher Zoom (1 = ganzes Bild)
+  const [view, setView] = useState<Px>([0, 0]); // sichtbare linke obere Ecke [Video-px]
+  const [follow, setFollow] = useState(true);
+  const [showLoupe, setShowLoupe] = useState(true);
   const [hover, setHover] = useState<Px | null>(null);
+  const drag = useRef<{ x: number; y: number; view: Px; moved: boolean } | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const nFrames = dims ? Math.max(1, Math.floor(dims.duration * fileFps)) : 0;
@@ -109,6 +114,8 @@ export function TrackerPanel() {
     setError(null);
     setMsg(null);
     templates.current = {};
+    setZoom(1);
+    setView([0, 0]);
     const p = loadProject(f);
     loadedRef.current = p;
     if (p) {
@@ -257,20 +264,24 @@ export function TrackerPanel() {
     cv.style.width = `${dims.w * s}px`;
     cv.style.height = `${dims.h * s}px`;
     const ctx = cv.getContext('2d')!;
-    ctx.setTransform(dpr * s, 0, 0, dpr * s, 0, 0);
+    const k = s * zoom; // effektiver Maßstab
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.fillStyle = '#0B0B0D'; ctx.fillRect(0, 0, cv.width, cv.height);
+    ctx.setTransform(dpr * k, 0, 0, dpr * k, -view[0] * dpr * k, -view[1] * dpr * k);
+    ctx.imageSmoothingEnabled = zoom < 3; // ab 3× einzelne Pixel scharf zeigen
     ctx.drawImage(off, 0, 0);
-    const lw = 1.5 / s;
+    const lw = 1.5 / k;
     // Kalibrierung
     if (calib.scaleA && calib.scaleB) {
-      ctx.strokeStyle = '#F59E0B'; ctx.lineWidth = lw; ctx.setLineDash([6 / s, 4 / s]);
+      ctx.strokeStyle = '#F59E0B'; ctx.lineWidth = lw; ctx.setLineDash([6 / k, 4 / k]);
       ctx.beginPath(); ctx.moveTo(...calib.scaleA); ctx.lineTo(...calib.scaleB); ctx.stroke(); ctx.setLineDash([]);
     }
-    for (const p of [calib.scaleA, calib.scaleB]) if (p) { ctx.fillStyle = '#F59E0B'; ctx.beginPath(); ctx.arc(p[0], p[1], 3 / s, 0, 7); ctx.fill(); }
+    for (const p of [calib.scaleA, calib.scaleB]) if (p) { ctx.fillStyle = '#F59E0B'; ctx.beginPath(); ctx.arc(p[0], p[1], 3 / k, 0, 7); ctx.fill(); }
     if (calib.origin) {
-      const [ox, oy] = calib.origin; const r = 10 / s;
+      const [ox, oy] = calib.origin; const r = 10 / k;
       ctx.strokeStyle = '#22C55E'; ctx.lineWidth = lw;
       ctx.beginPath(); ctx.moveTo(ox - r, oy); ctx.lineTo(ox + r, oy); ctx.moveTo(ox, oy - r); ctx.lineTo(ox, oy + r); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(ox, oy); ctx.lineTo(ox + (calib.waterRight ? 40 : -40) / s, oy); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(ox, oy); ctx.lineTo(ox + (calib.waterRight ? 40 : -40) / k, oy); ctx.stroke();
     }
     // Spur des aktiven Punkts
     const tr = tracks[active];
@@ -286,7 +297,7 @@ export function TrackerPanel() {
       ctx.stroke();
     }
     // Strichfigur
-    ctx.strokeStyle = 'rgba(244,244,245,0.85)'; ctx.lineWidth = 2 / s;
+    ctx.strokeStyle = 'rgba(244,244,245,0.85)'; ctx.lineWidth = 2 / k;
     for (const [a, b] of SKELETON) {
       const pa = tracks[a]?.[frame]; const pb = tracks[b]?.[frame];
       if (pa && pb) { ctx.beginPath(); ctx.moveTo(...pa); ctx.lineTo(...pb); ctx.stroke(); }
@@ -295,15 +306,15 @@ export function TrackerPanel() {
       const p = tracks[pt.id]?.[frame];
       if (!p) continue;
       const isA = pt.id === active;
-      ctx.fillStyle = pt.color; ctx.strokeStyle = '#0B0B0D'; ctx.lineWidth = 1 / s;
-      ctx.beginPath(); ctx.arc(p[0], p[1], (isA ? 5 : 3.5) / s, 0, 7); ctx.fill(); ctx.stroke();
-      if (isA) { ctx.strokeStyle = '#F4F4F5'; ctx.beginPath(); ctx.arc(p[0], p[1], 9 / s, 0, 7); ctx.stroke(); }
+      ctx.fillStyle = pt.color; ctx.strokeStyle = '#0B0B0D'; ctx.lineWidth = 1 / k;
+      ctx.beginPath(); ctx.arc(p[0], p[1], (isA ? 5 : 3.5) / k, 0, 7); ctx.fill(); ctx.stroke();
+      if (isA) { ctx.strokeStyle = '#F4F4F5'; ctx.beginPath(); ctx.arc(p[0], p[1], 9 / k, 0, 7); ctx.stroke(); }
     }
     if (suggest) {
-      ctx.strokeStyle = suggest.score >= threshold ? '#22C55E' : '#F59E0B'; ctx.lineWidth = lw; ctx.setLineDash([3 / s, 3 / s]);
-      ctx.beginPath(); ctx.arc(suggest.x, suggest.y, 8 / s, 0, 7); ctx.stroke(); ctx.setLineDash([]);
+      ctx.strokeStyle = suggest.score >= threshold ? '#22C55E' : '#F59E0B'; ctx.lineWidth = lw; ctx.setLineDash([3 / k, 3 / k]);
+      ctx.beginPath(); ctx.arc(suggest.x, suggest.y, 8 / k, 0, 7); ctx.stroke(); ctx.setLineDash([]);
     }
-  }, [dims, calib, tracks, active, frame, step, suggest, threshold]);
+  }, [dims, calib, tracks, active, frame, step, suggest, threshold, zoom, view]);
 
   useEffect(() => { draw(); }, [draw]);
   useEffect(() => {
@@ -325,17 +336,92 @@ export function TrackerPanel() {
     ctx.drawImage(off, hover[0] - size / Z / 2, hover[1] - size / Z / 2, size / Z, size / Z, 0, 0, size, size);
     ctx.strokeStyle = '#E10600'; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(size / 2, 0); ctx.lineTo(size / 2, size); ctx.moveTo(0, size / 2); ctx.lineTo(size, size / 2); ctx.stroke();
-  }, [hover, frame]);
+  }, [hover, frame, showLoupe]);
 
   // Projekt speichern
   useEffect(() => {
     if (file && dims && last > first) saveProject(file, { fileFps, captureFps, first, last, step, calib, tracks });
   }, [file, dims, fileFps, captureFps, first, last, step, calib, tracks]);
 
+  // ---------------------------------------------------------------- Zoom & Verschieben
+  const clampView = useCallback((v: Px, z: number): Px => {
+    if (!dims) return v;
+    const vw = dims.w / z;
+    const vh = dims.h / z;
+    return [Math.min(Math.max(v[0], 0), dims.w - vw), Math.min(Math.max(v[1], 0), dims.h - vh)];
+  }, [dims]);
+
+  /** Zoom auf z, so dass der Video-Punkt ``at`` an der Bildschirmposition ``screen`` bleibt. */
+  const zoomTo = useCallback((z: number, at?: Px, screen?: Px) => {
+    if (!dims) return;
+    const z2 = Math.min(16, Math.max(1, z));
+    const vw = dims.w / zoom;
+    const vh = dims.h / zoom;
+    const p: Px = at ?? [view[0] + vw / 2, view[1] + vh / 2];
+    const sc: Px = screen ?? [(p[0] - view[0]) * scale * zoom, (p[1] - view[1]) * scale * zoom];
+    const nv: Px = [p[0] - sc[0] / (scale * z2), p[1] - sc[1] / (scale * z2)];
+    setZoom(z2);
+    setView(clampView(nv, z2));
+  }, [dims, zoom, view, scale, clampView]);
+
+  const centerOn = useCallback((p: Px) => {
+    if (!dims) return;
+    setView(clampView([p[0] - dims.w / zoom / 2, p[1] - dims.h / zoom / 2], zoom));
+  }, [dims, zoom, clampView]);
+
+  // Mausrad: Zoom um den Mauszeiger (nativer Listener, damit die Seite nicht scrollt)
+  useEffect(() => {
+    const cv = viewRef.current;
+    if (!cv) return;
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const r = cv.getBoundingClientRect();
+      const sc: Px = [e.clientX - r.left, e.clientY - r.top];
+      const at: Px = [view[0] + sc[0] / (scale * zoom), view[1] + sc[1] / (scale * zoom)];
+      zoomTo(zoom * (e.deltaY < 0 ? 1.25 : 0.8), at, sc);
+    };
+    cv.addEventListener('wheel', onWheel, { passive: false });
+    return () => cv.removeEventListener('wheel', onWheel);
+  }, [zoomTo, view, scale, zoom, url, dims]);
+
+  // „Ansicht folgt Punkt“: aktiven Punkt (oder Vorschlag/Vorhersage) im Blick halten
+  useEffect(() => {
+    if (!follow || zoom <= 1 || !dims) return;
+    const p = tracks[active]?.[frame] ?? (suggest ? [suggest.x, suggest.y] as Px : null) ?? predict(tracks[active], frame, step) ?? tracks[active]?.[frame - step];
+    if (!p) return;
+    const vw = dims.w / zoom;
+    const vh = dims.h / zoom;
+    const rx = (p[0] - view[0]) / vw;
+    const ry = (p[1] - view[1]) / vh;
+    if (rx < 0.25 || rx > 0.75 || ry < 0.25 || ry > 0.75) centerOn(p);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [frame, active, suggest, follow, zoom]);
+
+  const onPointerDown = (e: React.PointerEvent) => {
+    if (e.button !== 0) return;
+    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+    drag.current = { x: e.clientX, y: e.clientY, view, moved: false };
+  };
+  const onPointerMove = (e: React.PointerEvent) => {
+    setHover(toImage(e));
+    const d = drag.current;
+    if (!d) return;
+    const dx = e.clientX - d.x;
+    const dy = e.clientY - d.y;
+    if (!d.moved && Math.hypot(dx, dy) < 5) return;
+    d.moved = true;
+    if (zoom > 1) setView(clampView([d.view[0] - dx / (scale * zoom), d.view[1] - dy / (scale * zoom)], zoom));
+  };
+  const onPointerUp = (e: React.PointerEvent) => {
+    const d = drag.current;
+    drag.current = null;
+    if (d && !d.moved) void onClick(e);
+  };
+
   // ---------------------------------------------------------------- Interaktion
   const toImage = (e: React.MouseEvent): Px => {
     const r = viewRef.current!.getBoundingClientRect();
-    return [(e.clientX - r.left) / scale, (e.clientY - r.top) / scale];
+    return [view[0] + (e.clientX - r.left) / (scale * zoom), view[1] + (e.clientY - r.top) / (scale * zoom)];
   };
 
   const setPoint = (pt: string, f: number, p: Px) => {
@@ -353,7 +439,7 @@ export function TrackerPanel() {
     if (frame + step <= last) await seek(frame + step);
   };
 
-  const onClick = async (e: React.MouseEvent) => {
+  const onClick = async (e: React.MouseEvent | React.PointerEvent) => {
     if (!dims || running) return;
     const p = toImage(e);
     if (tool === 'scaleA') { setCalib({ ...calib, scaleA: p }); setTool('scaleB'); return; }
@@ -411,6 +497,9 @@ export function TrackerPanel() {
       if (e.key === 'ArrowRight') { e.preventDefault(); await userSeek(Math.min(frame + k, nFrames - 1)); }
       else if (e.key === 'ArrowLeft') { e.preventDefault(); await userSeek(Math.max(frame - k, 0)); }
       else if (e.key === 'Enter') { e.preventDefault(); await acceptSuggestion(); }
+      else if (e.key === '+' || e.key === '=') { e.preventDefault(); zoomTo(zoom * 1.5, hover ?? undefined); }
+      else if (e.key === '-') { e.preventDefault(); zoomTo(zoom / 1.5, hover ?? undefined); }
+      else if (e.key === '0') { e.preventDefault(); setZoom(1); setView([0, 0]); }
       else if (e.key === 'Delete' || e.key === 'Backspace') {
         setTracks((tr) => { const c = { ...(tr[active] ?? {}) }; delete c[frame]; return { ...tr, [active]: c }; });
       }
@@ -550,10 +639,26 @@ export function TrackerPanel() {
             <video ref={videoRef} src={url} preload="auto" muted playsInline style={{ display: 'none' }}
               onLoadedMetadata={onLoaded}
               onError={() => setError('Video lässt sich in diesem Browser nicht abspielen (oft HEVC/.mov in Chrome/Firefox). Lösung: in Safari/Edge öffnen oder nach H.264 umwandeln, z. B. ffmpeg -i in.mov -c:v libx264 -crf 18 -an out.mp4')} />
+            {dims && (
+              <div className="zoom-bar">
+                <button type="button" className="btn small" onClick={() => zoomTo(zoom / 1.5)} aria-label="Verkleinern">−</button>
+                <span className="mono zoom-val">{zoom.toFixed(zoom < 10 ? 1 : 0)}×</span>
+                <button type="button" className="btn small" onClick={() => zoomTo(zoom * 1.5)} aria-label="Vergrößern">+</button>
+                <button type="button" className="btn small ghost" onClick={() => { setZoom(1); setView([0, 0]); }}>Einpassen</button>
+                <button type="button" className="btn small ghost" onClick={() => {
+                  const p = tracks[active]?.[frame] ?? (suggest ? [suggest.x, suggest.y] as Px : null) ?? predict(tracks[active], frame, step);
+                  if (p) { if (zoom < 3) zoomTo(4, p, [dims.w * scale / 2, dims.h * scale / 2]); else centerOn(p); }
+                }}>Auf Punkt zoomen</button>
+                <label className="check"><input type="checkbox" checked={follow} onChange={(e) => setFollow(e.target.checked)} /> Ansicht folgt Punkt</label>
+                <label className="check"><input type="checkbox" checked={showLoupe} onChange={(e) => setShowLoupe(e.target.checked)} /> Lupe (bis 3×)</label>
+                <span className="footnote">Mausrad = Zoom · Ziehen = Verschieben · Klick = Punkt setzen · Tasten + − 0</span>
+              </div>
+            )}
             <div className="tracker-canvas">
-              <canvas ref={viewRef} className={tool === 'track' ? 'cur-track' : 'cur-calib'} onClick={onClick}
-                onMouseMove={(e) => setHover(toImage(e))} onMouseLeave={() => setHover(null)} />
-              {hover && <canvas ref={loupeRef} width={160} height={160} className="loupe" />}
+              <canvas ref={viewRef} className={tool === 'track' ? 'cur-track' : 'cur-calib'}
+                onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp}
+                onPointerLeave={() => setHover(null)} style={{ touchAction: 'none' }} />
+              {hover && showLoupe && zoom < 3 && <canvas ref={loupeRef} width={160} height={160} className="loupe" />}
             </div>
             {dims && (
               <div className="timeline tracker-tl">
