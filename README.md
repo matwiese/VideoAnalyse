@@ -103,6 +103,8 @@ docs/validation/ Modellnotizen, offene Rückfragen, Kennwert-Tabellen
 
 ## Eigene Videos auswerten
 
+**Schritt-für-Schritt-Handbuch (PDF):** [docs/Anleitung_Videoanalyse_3m-Brett.pdf](docs/Anleitung_Videoanalyse_3m-Brett.pdf)
+
 Anleitung zu Aufnahme, Tracking (Kinovea/OpenCap) und Export: [docs/video-anleitung.md](docs/video-anleitung.md).
 Punkte lassen sich direkt in der App tracken (Menü „Video-Tracker“, auch für sehr große Videos – kein Upload).
 Ohne eigenes Video: in der App „Analyse (Video)“ → „Beispieldatensatz laden“ (synthetisch).
