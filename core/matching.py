@@ -208,7 +208,10 @@ def _q_from_series(r) -> np.ndarray:
     n = len(th)
     q = np.zeros((n, 12))
     q[:, 3:9] = th
-    q[:, 2] = np.unwrap(np.arctan2(pts[:, 3] - pts[:, 1], pts[:, 2] - pts[:, 0]))
+    phi = np.unwrap(np.arctan2(pts[:, 3] - pts[:, 1], pts[:, 2] - pts[:, 0]))
+    # Zehen zeigen nach vorn: φ_toe ≈ π. atan2 liefert bei leicht geneigtem Brett −π+ε statt π+ε
+    # → auf den Zweig um π legen (sonst springen alle absoluten Winkel um 2π).
+    q[:, 2] = phi - 2 * math.pi * np.round((phi[0] - math.pi) / (2 * math.pi))
     return q
 
 

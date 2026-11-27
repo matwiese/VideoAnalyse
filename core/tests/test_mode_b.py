@@ -127,3 +127,19 @@ def test_matching_reaches_spec_threshold(synthetic):
     _trc, _truth, ps, meas, inv = synthetic
     res = match(inv, ps, meas.t_to, generations=12, popsize=12)
     assert res.score < 10.0  # SPEC 11.2 Etappe 6: Matching-RMS < 10 % an Testdaten
+
+
+def test_q_from_series_branch_near_pi():
+    """Regression: Zehenwinkel knapp über π (Brett nach oben geneigt) darf die absoluten
+    Winkel nicht um 2π verschieben (Rumpforientierung im Matching)."""
+    from types import SimpleNamespace
+
+    from core.matching import _q_from_series
+
+    eps = 0.01
+    toe = np.array([0.0, 0.0])
+    ball = toe + 0.06 * np.array([math.cos(math.pi + eps), math.sin(math.pi + eps)])
+    pts = np.tile(np.r_[toe, ball, np.zeros(20)], (3, 1))
+    r = SimpleNamespace(series={"theta": np.zeros((3, 6)), "points": pts})
+    q = _q_from_series(r)
+    assert q[0, 2] == pytest.approx(math.pi + eps, abs=1e-9)
