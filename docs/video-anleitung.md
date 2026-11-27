@@ -20,6 +20,38 @@ gematchte Sprünge mit RMS < 10 %, bevor Prognosen als kalibriert gelten.
 
 ## 2. Tracking
 
+### Variante A (empfohlen): Video-Tracker in der App
+
+Menü **„Video-Tracker“**. Das Video wird nur lokal im Browser geöffnet (kein Upload) – auch
+Dateien mit mehreren GB funktionieren, weil der Browser direkt von der Festplatte liest.
+
+1. **Bildrate:** Die App misst die Bildrate der Datei. Bei Handy-Zeitlupen (z. B. 240 Bilder/s
+   aufgenommen, als 30 Bilder/s gespeichert) unbedingt die **echte Aufnahme-Bildrate** eintragen.
+2. **Bereich:** zum Hürden-Lift-off springen → „Aktuelles = Start“, bis ~0,3 s nach dem Absprung →
+   „Aktuelles = Ende“. Bei sehr hoher Bildrate ggf. nur jedes 2. Bild tracken (≥ 200 Hz echt bleiben).
+3. **Kalibrierung:** „Maßstab: 2 Punkte klicken“ an einem Meterstab/bekannter Strecke in der
+   Brettebene, Länge eintragen (waagrechte Strecke → Haken für Neigungskorrektur);
+   „Brettspitze in Ruhe klicken“ in einem Bild ohne Springer:in auf dem Brett; Wasserseite wählen.
+4. **Punkte:** Punkt links wählen, im Bild anklicken (Lupe oben rechts hilft), dann
+   **„Automatisch weiter“** – die App verfolgt den Punkt per Bildvergleich und hält an, sobald sie
+   unsicher ist (dann Punkt anklicken und erneut starten). Tasten: ← → Bild, Enter = Vorschlag
+   übernehmen, Entf = löschen. Klebepunkte machen die Automatik deutlich zuverlässiger.
+5. **Export:** „An Analyse übergeben“ (Vollversion) oder „CSV speichern“.
+   Der Stand wird automatisch im Browser gespeichert; „Projekt sichern“ für ein Backup.
+
+Getestet mit einem gerenderten Zeitlupen-Testvideo (1280×720, 222 Bilder): 11 Punkte mit
+53 Klicks, Genauigkeit 3–11 mm (Zehenspitze 16 mm); Analyse danach: Kontaktzeit +12 ms,
+Brettkraft-Hauptmaximum −7 %, H_y bei TO ±1 % gegenüber der Wahrheit
+(`scripts/make_test_video.py`, `web/e2e/tracker.e2e.cjs`).
+
+Falls das Video nicht lädt (häufig HEVC/.mov in Chrome/Firefox): in Safari/Edge öffnen oder umwandeln:
+
+```bash
+ffmpeg -i aufnahme.mov -c:v libx264 -crf 18 -an aufnahme.mp4
+```
+
+### Variante B: externe Programme
+
 **Kinovea (kostenlos, 2D):** je Körperpunkt eine Trajektorie anlegen, Namen wie unten vergeben,
 Koordinatensystem kalibrieren (Ursprung Brettspitze, Maßstab per Linie bekannter Länge),
 Export „Trajektorien → CSV“. Erwartetes Format: eine Zeitspalte und je Punkt zwei Spalten

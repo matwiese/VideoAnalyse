@@ -39,7 +39,9 @@ interface State {
   time: number;
   playing: boolean;
   speed: number;
-  page: 'sim' | 'study' | 'opt' | 'ana';
+  page: 'sim' | 'study' | 'opt' | 'ana' | 'track';
+  pendingAnalysis: { name: string; text: string; settings: Record<string, unknown> } | null;
+  setPendingAnalysis: (p: { name: string; text: string; settings: Record<string, unknown> } | null) => void;
   study: StudyResult | null;
   studyProgress: number;
   optJob: JobStatus<OptResult> | null;
@@ -54,7 +56,7 @@ interface State {
   setTime: (t: number) => void;
   setPlaying: (p: boolean) => void;
   setSpeed: (s: number) => void;
-  setPage: (v: 'sim' | 'study' | 'opt' | 'ana') => void;
+  setPage: (v: 'sim' | 'study' | 'opt' | 'ana' | 'track') => void;
   markMeasured: (keys: string[]) => void;
   showView: (v: View) => void;
   runSweep1d: (key: string, values: number[], metrics: string[], level: 1 | 2) => void;
@@ -193,6 +195,8 @@ export const useStore = create<State>((set, get) => {
     study: null,
     studyProgress: 0,
     optJob: null,
+    pendingAnalysis: null,
+    setPendingAnalysis: (p) => set({ pendingAnalysis: p }),
     setParam: (key, value) => {
       const values = { ...get().values, [key]: value };
       set({ values, preset: null });

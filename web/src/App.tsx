@@ -4,6 +4,7 @@ import { ChartTabs } from './panels/ChartTabs';
 import { MetricsPanel } from './panels/MetricsPanel';
 import { ParamPanel } from './panels/ParamPanel';
 import { AnalysisPanel } from './panels/AnalysisPanel';
+import { TrackerPanel } from './tracker/TrackerPanel';
 import { OptPanel } from './panels/OptPanel';
 import { StudyPanel } from './panels/StudyPanel';
 import { Timeline } from './panels/Timeline';
@@ -93,6 +94,7 @@ export function App() {
           <button type="button" className={page === 'sim' ? 'active' : ''} onClick={() => setPage('sim')} aria-pressed={page === 'sim'}>Simulation</button>
           <button type="button" className={page === 'study' ? 'active' : ''} onClick={() => setPage('study')} aria-pressed={page === 'study'}>Parameterstudie</button>
           <button type="button" className={page === 'opt' ? 'active' : ''} onClick={() => setPage('opt')} aria-pressed={page === 'opt'}>Optimierung</button>
+          <button type="button" className={page === 'track' ? 'active' : ''} onClick={() => setPage('track')} aria-pressed={page === 'track'}>Video-Tracker</button>
           <button type="button" className={page === 'ana' ? 'active' : ''} onClick={() => setPage('ana')} aria-pressed={page === 'ana'}>Analyse (Video)</button>
         </nav>
         <nav className="seg" aria-label="Modell-Level">
@@ -157,6 +159,8 @@ export function App() {
             <StudyPanel />
           ) : page === 'opt' ? (
             <OptPanel />
+          ) : page === 'track' ? (
+            <TrackerPanel />
           ) : (
             <AnalysisPanel />
           )}

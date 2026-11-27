@@ -26,6 +26,7 @@ Es gibt zwei Varianten:
 | Level 1 (live) | ✅ | ✅ |
 | Level 2 (Mehrkörper, Gelenke, Drehimpuls, Saltos) | – | ✅ |
 | Optimierung, Level-2-Studien | – | ✅ |
+| Video-Tracker (Punkte im Browser verfolgen, CSV) | ✅ | ✅ |
 | Analyse eigener Videos (Modus B) | – | ✅ |
 
 ### Vollversion starten
@@ -103,6 +104,7 @@ docs/validation/ Modellnotizen, offene Rückfragen, Kennwert-Tabellen
 ## Eigene Videos auswerten
 
 Anleitung zu Aufnahme, Tracking (Kinovea/OpenCap) und Export: [docs/video-anleitung.md](docs/video-anleitung.md).
+Punkte lassen sich direkt in der App tracken (Menü „Video-Tracker“, auch für sehr große Videos – kein Upload).
 Ohne eigenes Video: in der App „Analyse (Video)“ → „Beispieldatensatz laden“ (synthetisch).
 
 ## Wichtige Hinweise

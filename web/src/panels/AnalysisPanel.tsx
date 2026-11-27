@@ -1,5 +1,5 @@
 /** Modus B (SPEC 6.7, Etappe 6): Import gemessener Kinematik, inverse Dynamik, Matching. */
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { LineChart } from '../charts/LineChart';
 import { analyze, exampleTrc, jobStatus, startMatch, stopJob, type AnalysisResponse, type JobStatus, type MatchResult } from '../lib/api';
 import { PARAM_BY_KEY } from '../lib/params';
@@ -48,6 +48,17 @@ export function AnalysisPanel() {
   const [gens, setGens] = useState(10);
   const [pop, setPop] = useState(10);
   const [withInit, setWithInit] = useState(true);
+
+  const pending = useStore((s) => s.pendingAnalysis);
+  const setPending = useStore((s) => s.setPendingAnalysis);
+  useEffect(() => {
+    if (!pending) return;
+    setFile({ name: pending.name, text: pending.text, note: 'aus dem Video-Tracker (Meter, Ursprung Brettspitze in Ruhe)' });
+    setSt({ ...DEFAULTS, ...(pending.settings as Partial<Settings>) });
+    setMapping({});
+    setRes(null);
+    setPending(null);
+  }, [pending, setPending]);
 
   const athlete = useMemo(() => Object.fromEntries(Object.entries(values).filter(([k]) => !k.startsWith('numerics.model_level'))), [values]);
 
